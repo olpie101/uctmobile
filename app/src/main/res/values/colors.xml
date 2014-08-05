@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#0099FF</color>
+    <color name="primary_dark">#004C80</color>
+    <color name="primary_light">#50B9FF</color>
+    <color name="accent">#FFC300</color>
+    <color name="accent2">#FF8E00</color>
+    <color name="accent3">#D9FF00</color>
+    <color name="accent4">#E5fDA6</color>
+
+    <color name="com">#FFDD00</color>
+    <color name="ebe">#26810D</color>
+    <color name="hsc">#BF1238</color>
+    <color name="hum">#00247D</color>
+    <color name="law">#857040</color>
+    <color name="sci">#590075</color>
+    <color name="ched">#DD634B</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="tint_news_image">#33000000</color>
+
+</resources>

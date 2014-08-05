@@ -1,0 +1,53 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+         https://developer.android.com/design/patterns/navigation-drawer.html -->
+    <dimen name="navigation_drawer_width">240dp</dimen>
+
+    <dimen name="main_title_end_margin">24dp</dimen>
+    <dimen name="title_end_margin">40dp</dimen>
+    <dimen name="list_item_height">64dp</dimen>
+    <dimen name="list_item_height_small">48dp</dimen>
+    <dimen name="list_item_section_divider_height">8dp</dimen>
+    <dimen name="list_item_detailed_view_height">72dp</dimen>
+
+    <dimen name="text_size_display4">112sp</dimen>
+    <dimen name="text_size_display3">56sp</dimen>
+    <dimen name="text_size_display2">45sp</dimen>
+    <dimen name="text_size_display1">34sp</dimen>
+    <dimen name="text_size_headline">24sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_subhead">16sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+    <dimen name="text_size_caption">12sp</dimen>
+    <dimen name="text_size_menu">14sp</dimen>
+    <dimen name="text_size_button">14sp</dimen>
+
+    <dimen name="text_tracking_display4">-10pt</dimen>
+    <dimen name="text_tracking_display3">-5pt</dimen>
+    <dimen name="text_tracking_display2">0pt</dimen>
+    <dimen name="text_tracking_display1">0pt</dimen>
+    <dimen name="text_tracking_headline">0pt</dimen>
+    <dimen name="text_tracking_title">5pt</dimen>
+    <dimen name="text_tracking_subhead">10pt</dimen>
+    <dimen name="text_tracking_body">10pt</dimen>
+    <dimen name="text_tracking_caption">20pt</dimen>
+    <dimen name="text_tracking_menu">10pt</dimen>
+    <dimen name="text_tracking_button">10pt</dimen>
+
+    <dimen name="leading_size_display2">48pt</dimen>
+    <dimen name="leading_size_display1">40pt</dimen>
+    <dimen name="leading_size_headline">32pt</dimen>
+    <dimen name="leading_size_subhead2">28pt</dimen>
+    <dimen name="leading_size_subhead1">24pt</dimen>
+    <dimen name="leading_size_body2">24pt</dimen>
+    <dimen name="leading_size_body1">20pt</dimen>
+
+    <dimen name="cardview_height">200dp</dimen>
+    <dimen name="cardview_padding">8dp</dimen>
+    <dimen name="cardview_corner_radius">16dp</dimen>
+
+</resources>
