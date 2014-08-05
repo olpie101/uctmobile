@@ -5,8 +5,8 @@ package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses;
  */
 public interface UCTConstants {
     public static final String UCT_URL = "http://www.uct.ac.za";
-    public static final String UCT_DAILY_NEWS_URL = "http://www.uct.ac.za/dailynews/rss/";
-    public static final String UCT_MONDAY_PAPER_URL = "http://www.uct.ac.za/mondaypaper/rss/";
+    public static final String UCT_DAILY_NEWS_URL = UCT_URL+"/dailynews/rss/";
+    public static final String UCT_MONDAY_PAPER_URL = UCT_URL+"/mondaypaper/rss/";
 //    public static final String UCT_URL = "http://localhost/~eduardokolomajr/www.uct.ac.za";
 //    public static final String UCT_URL = "http://192.168.56.1/~eduardokolomajr/www.uct.ac.za/";
     public static final String HOMEPAGE_FEATURED_STORIES_CONTAINER = "#slider";
@@ -26,4 +26,9 @@ public interface UCTConstants {
     public static final String RSS_FEED_LINK_TAG = "link";
     public static final String RSS_FEED_DESCRIPTION_TAG = "description";
     public static final String RSS_FEED_PUB_DATE_TAG = "pubDate";
+
+    public static final String BUNDLE_EXTRA_RSS_ITEM = "rss-item";
+
+    public static final String html_header_body_open = "<html><head><style>html,body{margin: 0 auto;padding: 0px;}.rightmargin{width:100%;height:auto;margin:0px;padding:0px;}p{padding:5%;}</style></head><body>";
+    public static final String html_body_close = "</body></html>";
 }

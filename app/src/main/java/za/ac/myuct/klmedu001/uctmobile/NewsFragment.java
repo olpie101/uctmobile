@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -28,6 +30,7 @@ import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsFrontPageLoader
 import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsItem;
 import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsRSSLoader;
 import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.RSSItem;
+import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.UCTConstants;
 import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.ottoposters.NewsCardClickedEvent;
 
 /**
@@ -35,6 +38,9 @@ import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.ottoposters.NewsCar
  */
 public class NewsFragment extends Fragment{
     private final String TAG = "NewsFragment";
+
+    HashMap<String, RSSItem> rssFeed = new HashMap<String, RSSItem>();
+
     // The loader's unique id. Loader ids are specific to the Activity or
     // Fragment in which they reside.
     private static final int NEWS_LOADER_ID = 1;
@@ -142,19 +148,21 @@ public class NewsFragment extends Fragment{
     };
 
     //Callbacks for rss loader
-    private LoaderCallbacks<ArrayList<RSSItem>> rssItemLoaderCallbacks = new LoaderCallbacks<ArrayList<RSSItem>>() {
+    private LoaderCallbacks<HashMap<String, RSSItem>> rssItemLoaderCallbacks = new LoaderCallbacks<HashMap<String, RSSItem>>() {
         @Override
-        public Loader<ArrayList<RSSItem>> onCreateLoader(int i, Bundle bundle) {
+        public Loader<HashMap<String, RSSItem>> onCreateLoader(int i, Bundle bundle) {
             return new NewsRSSLoader(getActivity().getApplication().getBaseContext());
         }
 
         @Override
-        public void onLoadFinished(Loader<ArrayList<RSSItem>> arrayListLoader, ArrayList<RSSItem> rssItems) {
+        public void onLoadFinished(Loader<HashMap<String, RSSItem>> hashMapLoader, HashMap<String, RSSItem> rssItems) {
             Log.d(TAG, "Loaded RSS Feed");
+            if(rssItems != null)
+                rssFeed = rssItems;
         }
 
         @Override
-        public void onLoaderReset(Loader<ArrayList<RSSItem>> arrayListLoader) {
+        public void onLoaderReset(Loader<HashMap<String, RSSItem>> arrayListLoader) {
 
         }
     };
@@ -162,6 +170,12 @@ public class NewsFragment extends Fragment{
 
     @Subscribe
     public void onNewsCardClickedEvent(NewsCardClickedEvent card){
-        Toast.makeText(this.getActivity(), "card at position "+card.position+" clicked", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "card ' "+card.title +"' clicked", Toast.LENGTH_SHORT).show();
+        if(rssFeed.containsKey(card.title)){
+            Toast.makeText(this.getActivity(), "key in map", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), NewsArticleActivity.class);
+            intent.putExtra(UCTConstants.BUNDLE_EXTRA_RSS_ITEM, rssFeed.get(card.title));
+            startActivity(intent);
+        }
     }
 }

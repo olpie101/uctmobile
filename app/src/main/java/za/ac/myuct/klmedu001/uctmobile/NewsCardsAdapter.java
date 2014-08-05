@@ -124,7 +124,7 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
 
         @Override
         public void onClick(View view) {
-            BaseApplication.getEventBus().post(new NewsCardClickedEvent(getPosition()));
+            BaseApplication.getEventBus().post(new NewsCardClickedEvent(title.getText().toString()));
         }
     }
 

@@ -20,18 +20,19 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by eduardokolomajr on 2014/07/29.
  * All code for rss feed xml parsing is from: http://developer.android.com/training/basics/network-ops/xml.html
  */
-public class NewsRSSLoader extends AsyncTaskLoader<ArrayList<RSSItem>> {
+public class NewsRSSLoader extends AsyncTaskLoader<HashMap<String, RSSItem>> {
     private final long timeout = 20;                //request timeout limit
     private final TimeUnit unit = TimeUnit.SECONDS; //time unit for requests
     private final String TAG = "RSSLoader";
     // We hold a reference to the Loader’s data here.
-    private ArrayList<RSSItem> newsItems;
+    private HashMap<String, RSSItem> newsItems;
     // We don't use namespaces
     private static final String ns = null;
 
@@ -40,8 +41,9 @@ public class NewsRSSLoader extends AsyncTaskLoader<ArrayList<RSSItem>> {
     }
 
     @Override
-    public ArrayList<RSSItem> loadInBackground() {
-        ArrayList<RSSItem> data = new ArrayList<RSSItem>();
+    public HashMap<String, RSSItem> loadInBackground() {
+        HashMap<String, RSSItem> data = new HashMap<String, RSSItem>();
+        ArrayList<RSSItem> dataList = new ArrayList<RSSItem>();
         OkHttpClient client = new OkHttpClient();
         client.setConnectTimeout(timeout, unit);
 
@@ -52,12 +54,8 @@ public class NewsRSSLoader extends AsyncTaskLoader<ArrayList<RSSItem>> {
             if(response.isSuccessful()) {
                 Log.d(TAG+"1", "Got response, parsing data paper");
 
-                data = parseFeed(response.body().charStream());
+                dataList = parseFeed(response.body().charStream()); //parse daily news feed
                 Log.d(TAG+"3", "feedSize="+data.size());
-
-                for(RSSItem item : data){
-                    Log.d(TAG, "ITEM: "+item.toString());
-                }
             }
 
         } catch (IOException e) {
@@ -71,16 +69,18 @@ public class NewsRSSLoader extends AsyncTaskLoader<ArrayList<RSSItem>> {
             if(response.isSuccessful()) {
                 Log.d(TAG+"1", "Got response, parsing data for monday paper");
 
-                data.addAll(parseFeed(response.body().charStream()));
+                dataList.addAll(parseFeed(response.body().charStream())); //parse monday paper feed and add to current list
                 Log.d(TAG+"3", "feedSize="+data.size());
-
-                for(RSSItem item : data){
-                    Log.d(TAG, "ITEM: "+item.toString());
-                }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+//        Collections.sort(dataList);
+        for(RSSItem item : dataList){
+            Log.d(TAG, "ITEM: "+item.toString());
+            data.put(item.title, item);
         }
         return data;
     }
@@ -92,7 +92,7 @@ public class NewsRSSLoader extends AsyncTaskLoader<ArrayList<RSSItem>> {
      */
 
     @Override
-    public void deliverResult(ArrayList<RSSItem> data) {
+    public void deliverResult(HashMap<String, RSSItem> data) {
         if (isReset()) {
             // The Loader has been reset; ignore the result and invalidate the data.
             releaseResources(data);
@@ -102,13 +102,12 @@ public class NewsRSSLoader extends AsyncTaskLoader<ArrayList<RSSItem>> {
 
         // Hold a reference to the old data so it doesn't get garbage collected.
         // We must protect it until the new data has been delivered.
-        ArrayList<RSSItem> oldData = newsItems;
+        HashMap<String, RSSItem> oldData = newsItems;
         newsItems = data;
 
         if (isStarted()) {
             // If the Loader is in a started state, deliver the results to the
             // client. The superclass method does this for us.
-            Collections.sort(data);
             super.deliverResult(data);
         }
 //        Log.d(TAG, "dr is started");
@@ -179,7 +178,7 @@ public class NewsRSSLoader extends AsyncTaskLoader<ArrayList<RSSItem>> {
     }
 
     @Override
-    public void onCanceled(ArrayList<RSSItem> data) {
+    public void onCanceled(HashMap<String, RSSItem> data) {
         // Attempt to cancel the current asynchronous load.
         super.onCanceled(data);
 
@@ -188,7 +187,7 @@ public class NewsRSSLoader extends AsyncTaskLoader<ArrayList<RSSItem>> {
         releaseResources(data);
     }
 
-    private void releaseResources(ArrayList<RSSItem> data) {
+    private void releaseResources(HashMap<String, RSSItem> data) {
         // For a simple List, there is nothing to do. For something like a Cursor, we
         // would close it in this method. All resources associated with the Loader
         // should be released here.
