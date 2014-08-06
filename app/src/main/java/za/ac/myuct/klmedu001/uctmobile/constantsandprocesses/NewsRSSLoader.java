@@ -25,7 +25,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by eduardokolomajr on 2014/07/29.
- * All code for rss feed xml parsing is from: http://developer.android.com/training/basics/network-ops/xml.html
+ * code for rss feed xml parsing is from: http://developer.android.com/training/basics/network-ops/xml.html
+ *
+ * loader and loader manager help from
+ * http://www.androiddesignpatterns.com/2012/08/implementing-loaders.html
+ * and its associated tutorial series
  */
 public class NewsRSSLoader extends AsyncTaskLoader<HashMap<String, RSSItem>> {
     private final long timeout = 20;                //request timeout limit

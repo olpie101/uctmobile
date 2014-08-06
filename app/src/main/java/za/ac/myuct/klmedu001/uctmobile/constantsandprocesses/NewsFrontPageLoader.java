@@ -19,6 +19,10 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by eduardokolomajr on 2014/07/26.
+ *
+ * loader and loader manager help from
+ * http://www.androiddesignpatterns.com/2012/08/implementing-loaders.html
+ * and its associated tutorial series
  */
 public class NewsFrontPageLoader extends AsyncTaskLoader<ArrayList<NewsItem>> {
     private final long timeout = 20;                //request timeout limit
@@ -108,6 +112,8 @@ public class NewsFrontPageLoader extends AsyncTaskLoader<ArrayList<NewsItem>> {
             }
         }catch(IOException e){
             Log.d(TAG, "IOException");
+            stopLoading();
+
         }
 
         Log.d(TAG, "BG end");

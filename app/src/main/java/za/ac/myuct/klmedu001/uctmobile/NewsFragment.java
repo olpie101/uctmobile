@@ -7,6 +7,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,11 +36,15 @@ import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.ottoposters.NewsCar
 
 /**
  * Created by eduardokolomajr on 2014/07/25.
+ * help for use of SwipeRefreshLayout and its listener from
+ * http://antonioleiva.com/swiperefreshlayout/
+ *
+ * loader and loader manager help from
+ * http://www.androiddesignpatterns.com/2012/08/implementing-loaders.html
+ * and its associated tutorial series
  */
-public class NewsFragment extends Fragment{
+public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = "NewsFragment";
-
-    HashMap<String, RSSItem> rssFeed = new HashMap<String, RSSItem>();
 
     // The loader's unique id. Loader ids are specific to the Activity or
     // Fragment in which they reside.
@@ -53,6 +58,12 @@ public class NewsFragment extends Fragment{
     private static final String ARG_SECTION_NUMBER = "section_number";
     @InjectView(R.id.rv_news)
     RecyclerView newsCardsView;
+    @InjectView(R.id.swipe_container_news)
+    SwipeRefreshLayout newsContainer;
+    HashMap<String, RSSItem> rssFeed = new HashMap<String, RSSItem>();
+    LoaderManager lm;       //Used for background loading
+    private boolean newsLoading;    //track if loading for news is finished
+    private boolean rssLoading;     //track if loading for rss feed is fnished
 
 
 
@@ -87,15 +98,8 @@ public class NewsFragment extends Fragment{
         newsCardsView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         newsCardsView.setItemAnimator(new DefaultItemAnimator());
 
-        // Initialize the Loader with id '1' and callbacks 'mCallbacks'.
-        // If the loader doesn't already exist, one is created. Otherwise,
-        // the already created Loader is reused. In either case, the
-        // LoaderManager will manage the Loader across the Activity/Fragment
-        // lifecycle, will receive any new loads once they have completed,
-        // and will report this new data back to the 'mCallbacks' object.
-        LoaderManager lm = getLoaderManager();
-        lm.initLoader(NEWS_LOADER_ID, null, newsItemLoaderCallbacks);
-        lm.initLoader(RSS_LOADER_ID, null, rssItemLoaderCallbacks);
+        newsContainer.setOnRefreshListener(this);
+        newsContainer.setColorSchemeResources(R.color.white, R.color.primary_dark, R.color.black, R.color.primary);
 
         return rootView;
     }
@@ -114,6 +118,8 @@ public class NewsFragment extends Fragment{
     public void onResume() {
         super.onResume();
         BaseApplication.getEventBus().register(this);
+        lm = getLoaderManager();
+        onRefresh();
     }
 
     @Override
@@ -139,6 +145,9 @@ public class NewsFragment extends Fragment{
         public void onLoadFinished(Loader<ArrayList<NewsItem>> arrayListLoader, ArrayList<NewsItem> newsItems) {
             Log.d(TAG, "finished loading");
             ((NewsCardsAdapter)newsCardsView.getAdapter()).setItems(newsItems);
+            lm.destroyLoader(NEWS_LOADER_ID);
+            newsLoading = false;
+            updateSwipeToRefresh();
         }
 
         @Override
@@ -159,6 +168,10 @@ public class NewsFragment extends Fragment{
             Log.d(TAG, "Loaded RSS Feed");
             if(rssItems != null)
                 rssFeed = rssItems;
+
+            lm.destroyLoader(RSS_LOADER_ID);    //destroy rss loader
+            rssLoading = false;
+            updateSwipeToRefresh();
         }
 
         @Override
@@ -177,5 +190,41 @@ public class NewsFragment extends Fragment{
             intent.putExtra(UCTConstants.BUNDLE_EXTRA_RSS_ITEM, rssFeed.get(card.title));
             startActivity(intent);
         }
+    }
+
+    //required for the swipe to refresh pattern
+    @Override
+    public void onRefresh() {
+        // Initialize the Loader with id '1' and callbacks 'mCallbacks'.
+        // If the loader doesn't already exist, one is created. Otherwise,
+        // the already created Loader is reused. In either case, the
+        // LoaderManager will manage the Loader across the Activity/Fragment
+        // lifecycle, will receive any new loads once they have completed,
+        // and will report this new data back to the 'mCallbacks' object.
+
+        boolean startedLoading = false;
+        if(lm.getLoader(NEWS_LOADER_ID) == null) {
+            lm.initLoader(NEWS_LOADER_ID, null, newsItemLoaderCallbacks);
+            startedLoading = true;
+            newsLoading = true;
+        }
+
+        if(lm.getLoader(RSS_LOADER_ID) == null){
+            lm.initLoader(RSS_LOADER_ID, null, rssItemLoaderCallbacks);
+            startedLoading = true;
+            rssLoading = true;
+        }
+
+        if(!startedLoading)
+            newsContainer.setRefreshing(false);
+
+    }
+
+    //called in both onLoadFinished callbacks
+    //both loading booleans need to be false for view to
+    //stop displaying the loading icon
+    private void updateSwipeToRefresh(){
+        if(!newsLoading && !rssLoading)
+            newsContainer.setRefreshing(false);
     }
 }
