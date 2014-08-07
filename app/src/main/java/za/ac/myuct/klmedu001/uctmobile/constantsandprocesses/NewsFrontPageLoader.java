@@ -78,7 +78,7 @@ public class NewsFrontPageLoader extends AsyncTaskLoader<ArrayList<NewsItem>> {
 
                 //Find featured stories
                 Element featuredStoriesSlider = doc.select(UCTConstants.HOMEPAGE_FEATURED_STORIES_CONTAINER).first();
-                Log.d(TAG, "Fstories size = " + featuredStoriesSlider.toString());
+                //Log.d(TAG, "Fstories size = " + featuredStoriesSlider.toString());
                 Elements featuredStories = featuredStoriesSlider.select(UCTConstants.HOMEPAGE_FEATURED_STORIES_ITEM);
                 Log.d(TAG, "Fss = " + featuredStories.size());
                 //            Log.d(TAG, doc.toString());
@@ -86,7 +86,7 @@ public class NewsFrontPageLoader extends AsyncTaskLoader<ArrayList<NewsItem>> {
 
                 //process each featured story
                 for (Element story : featuredStories) {
-                    Log.d(TAG, "title search" + story.toString());
+//                    Log.d(TAG, "title search" + story.toString());
                     String title = story.getElementsByTag(UCTConstants.HOMEPAGE_TITLE).first().text();                      //Get title
                     String link = story.select(UCTConstants.HOMEPAGE_LINK).last().attr(UCTConstants.HOMEPAGE_LINK_HREF);    //Get story link
                     String imageLink = UCTConstants.UCT_URL + story.select(UCTConstants.HOMEPAGE_IMAGE).first().attr(UCTConstants.HOMEPAGE_IMAGE_SRC); //Get story image link

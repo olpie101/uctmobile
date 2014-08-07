@@ -3,6 +3,10 @@ package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,11 +15,17 @@ import java.util.Locale;
 /**
  * Created by eduardokolomajr on 2014/07/29.
  */
-public class RSSItem implements Comparable, Parcelable {
-    public final String title;
-    public final String link;
-    public final String description;
-    public final Date pubDate;
+@Table(name = "rssFeed")
+public class RSSItem extends Model implements Comparable, Parcelable {
+    @Column public String title;
+    @Column public String link;
+    @Column public String description;
+    @Column (index=true) public Date pubDate;
+
+    @SuppressWarnings("unused") //Used by active android ORM library
+    public RSSItem(){
+
+    }
 
     public RSSItem(String title, String link, String description, String pubDate) {
         this.title = title;

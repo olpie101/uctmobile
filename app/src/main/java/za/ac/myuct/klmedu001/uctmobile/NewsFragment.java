@@ -17,15 +17,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
 import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.BaseApplication;
 import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsFrontPageLoader;
 import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsItem;
@@ -61,9 +66,10 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @InjectView(R.id.swipe_container_news)
     SwipeRefreshLayout newsContainer;
     HashMap<String, RSSItem> rssFeed = new HashMap<String, RSSItem>();
+    List<NewsItem> newsFeed = new ArrayList<NewsItem>();
     LoaderManager lm;       //Used for background loading
     private boolean newsLoading;    //track if loading for news is finished
-    private boolean rssLoading;     //track if loading for rss feed is fnished
+    private boolean rssLoading;     //track if loading for rss feed is finished
 
 
 
@@ -100,6 +106,19 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         newsContainer.setOnRefreshListener(this);
         newsContainer.setColorSchemeResources(R.color.white, R.color.primary_dark, R.color.black, R.color.primary);
+
+        if(savedInstanceState == null){
+            //Load entries from database for both the news feed and rss feed
+            newsFeed = new Select().all().from(NewsItem.class).execute();
+            Collections.reverse(newsFeed);  //list is in reverse in the database for storage purposes
+            List<RSSItem> rssFeedList = new Select().all().from(RSSItem.class).execute();
+
+            for(RSSItem item : rssFeedList){
+                rssFeed.put(item.title, item);
+            }
+
+            ((NewsCardsAdapter) newsCardsView.getAdapter()).setItems((ArrayList<NewsItem>) newsFeed);
+        }
 
         return rootView;
     }
@@ -144,7 +163,40 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         @Override
         public void onLoadFinished(Loader<ArrayList<NewsItem>> arrayListLoader, ArrayList<NewsItem> newsItems) {
             Log.d(TAG, "finished loading");
-            ((NewsCardsAdapter)newsCardsView.getAdapter()).setItems(newsItems);
+            //Done loading news feed entries
+            //Add any new entries into the database
+            if(newsFeed != null && newsFeed.size() == 0) {      //nothing was in database no need to check for duplicates
+                Toast.makeText(getActivity(), "news items was empty", Toast.LENGTH_SHORT).show();
+                //noinspection unchecked
+                newsFeed = (ArrayList<NewsItem>) newsItems.clone();
+                ((NewsCardsAdapter) newsCardsView.getAdapter()).setItems((ArrayList<NewsItem>) newsFeed);
+                saveToNewsTable(newsItems);
+            }else{
+                //used for bulk insertion, ensure that items are inserted into main in correct order
+                ArrayList<NewsItem> tempList = new ArrayList<NewsItem>();
+                //check for duplicates O(n) = n
+                //very few items in this list so it is fine
+                for(NewsItem item : newsItems){
+                    boolean exists = false;
+                    for(NewsItem otherItem : newsFeed){
+                        if(item.getLink().equals(otherItem.getLink())){
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if(!exists){
+                        //news item doesn't exist in data base add to database
+                        tempList.add(item);
+                    }
+                }
+
+                if(tempList.size() > 0){
+                    Log.d(TAG+12, "about to append");
+                    newsFeed.addAll(0, tempList);
+                    ((NewsCardsAdapter) newsCardsView.getAdapter()).setItems((ArrayList<NewsItem>) newsFeed);
+                    saveToNewsTable(tempList);
+                }
+            }
             lm.destroyLoader(NEWS_LOADER_ID);
             newsLoading = false;
             updateSwipeToRefresh();
@@ -166,8 +218,22 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         @Override
         public void onLoadFinished(Loader<HashMap<String, RSSItem>> hashMapLoader, HashMap<String, RSSItem> rssItems) {
             Log.d(TAG, "Loaded RSS Feed");
+            //Done loading news feed entries
+            //Add any new entries into the database
             if(rssItems != null)
-                rssFeed = rssItems;
+            {
+                //noinspection unchecked
+                HashMap<String, RSSItem> tempItems = (HashMap<String, RSSItem>) rssItems.clone();
+
+                String [] keys = tempItems.keySet().toArray(new String[5]);
+                for(String key : keys){
+                    if(rssFeed.containsKey(key)){
+                        tempItems.remove(key);
+                    }
+                }
+                rssFeed.putAll(tempItems);
+                saveToRssTable(tempItems);
+            }
 
             lm.destroyLoader(RSS_LOADER_ID);    //destroy rss loader
             rssLoading = false;
@@ -183,7 +249,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Subscribe
     public void onNewsCardClickedEvent(NewsCardClickedEvent card){
-        Toast.makeText(getActivity(), "card ' "+card.title +"' clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "card ' "+card.title +"' clicked, size = "+rssFeed.values().size(), Toast.LENGTH_SHORT).show();
         if(rssFeed.containsKey(card.title)){
             Toast.makeText(this.getActivity(), "key in map", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getActivity(), NewsArticleActivity.class);
@@ -207,16 +273,20 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             lm.initLoader(NEWS_LOADER_ID, null, newsItemLoaderCallbacks);
             startedLoading = true;
             newsLoading = true;
+            Toast.makeText(getActivity(), "ref news", Toast.LENGTH_SHORT).show();
         }
 
         if(lm.getLoader(RSS_LOADER_ID) == null){
             lm.initLoader(RSS_LOADER_ID, null, rssItemLoaderCallbacks);
             startedLoading = true;
             rssLoading = true;
+            Toast.makeText(getActivity(), "ref rss", Toast.LENGTH_SHORT).show();
         }
 
-        if(!startedLoading)
+        if(!startedLoading) {
             newsContainer.setRefreshing(false);
+            Toast.makeText(getActivity(), "ref none", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -226,5 +296,45 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private void updateSwipeToRefresh(){
         if(!newsLoading && !rssLoading)
             newsContainer.setRefreshing(false);
+    }
+
+    private boolean saveToNewsTable (ArrayList<NewsItem> list){
+        boolean success = false;
+        //noinspection unchecked
+        ArrayList<NewsItem> tempList = (ArrayList<NewsItem>) list.clone();
+        Collections.reverse(tempList);  //reverse list so works fine with the database
+        ActiveAndroid.beginTransaction();
+        try {
+            for(NewsItem item : tempList){
+                item.save();
+            }
+            ActiveAndroid.setTransactionSuccessful();
+            Log.d(TAG+12, "saved to news table");
+            success = true;
+        }
+        finally {
+            ActiveAndroid.endTransaction();
+            Log.d(TAG+12, "end save to news table");
+        }
+        return success;
+    }
+
+    private boolean saveToRssTable(HashMap<String, RSSItem> rssMap){
+        boolean success = false;
+        Collection<RSSItem> rssList = rssMap.values();
+        ActiveAndroid.beginTransaction();
+        try {
+            for(RSSItem item : rssList){
+                item.save();
+            }
+            ActiveAndroid.setTransactionSuccessful();
+            Log.d(TAG+12, "saved to rss table");
+            success = true;
+        }
+        finally {
+            ActiveAndroid.endTransaction();
+            Log.d(TAG+12, "end save to rss table");
+        }
+        return success;
     }
 }

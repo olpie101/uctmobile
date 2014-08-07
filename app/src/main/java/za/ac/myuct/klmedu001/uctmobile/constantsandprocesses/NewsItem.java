@@ -1,16 +1,21 @@
 package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.widget.ImageView;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Created by eduardokolomajr on 2014/07/27.
  */
-public class NewsItem {
-    private final String title;
-    private final String link;
-    private final String photoLink;
+@Table(name="newsFeed")
+public class NewsItem extends Model {
+    @Column private String title;
+    @Column private String link;
+    @Column private String photoLink;
+
+    @SuppressWarnings("unused") //Used by active android ORM library
+    public NewsItem() {
+    }
 
     public NewsItem(String title, String link, String photoLink) {
         this.title = title;
@@ -22,6 +27,7 @@ public class NewsItem {
         return title;
     }
 
+    @SuppressWarnings("unused")
     public String getLink() {
         return link;
     }

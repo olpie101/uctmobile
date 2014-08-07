@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +19,9 @@ import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -32,10 +36,9 @@ import za.ac.myuct.klmedu001.uctmobile.otherconstantsandprocess.NewsStreamDrawab
  * Created by eduardokolomajr on 2014/07/26.
  */
 public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.ViewHolder> {
-    private final String TAG = "NewsCardAdapter";
+    private static final String TAG = "NewsCardAdapter";
     private ArrayList<NewsItem> items;
-    private WeakReference<Context> context;
-    private float densityMultiplier;
+    private static WeakReference<Context> context;
     private static int imageHeight;         //image height in pixels
     private static int imageWidth;          //image height in pixels
     private static int imageCornerRadius;   //card corner radius in dips
@@ -57,7 +60,7 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
         mCornerRadius = (int) (imageCornerRadius * density + 0.5f);
         mMargin = (int) (imageMargin * density + 0.5f);
 
-        picasso = new Picasso.Builder(this.context.get()).downloader(new OkHttpDownloader(new OkHttpClient())).indicatorsEnabled(true).loggingEnabled(true).build();
+        picasso = new Picasso.Builder(this.context.get()).downloader(new OkHttpDownloader(new OkHttpClient())).loggingEnabled(true).build();
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -68,7 +71,7 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.setTitle(items.get(i).getTitle());
-        viewHolder.loadPhoto(items.get(i).getPhotoLink(), context.get());
+        viewHolder.loadPhoto(items.get(i).getPhotoLink());
         viewHolder.position = i;
     }
 
@@ -82,28 +85,46 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
         ImageView photo;
         @InjectView(R.id.card_view_title)
         TextView title;
+        String fileName;
         int position;
+        boolean saveBitmap;
+        //ensure that target is always found as a class global variable if
+        //it is going to be editing a a view such as an image view
         Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 if(Build.VERSION.SDK_INT < 21){
-//                    Log.d("NewsCardAdapter", "iw="+imageWidth+", ih="+imageHeight);
-//                    Log.d("NewsCardAdapter", "aiw="+bitmap.getWidth()+", aih="+bitmap.getHeight());
-                    photo.setImageDrawable(new NewsStreamDrawable(bitmap, mCornerRadius, mMargin));
-//                    photo.setImageBitmap(bitmap);
+                        photo.setImageDrawable(new NewsStreamDrawable(bitmap, mCornerRadius, mMargin));
+                        if(saveBitmap) {
+                            try {
+                                File file = new File(context.get().getCacheDir(), fileName);
+                                // Use the compress method on the Bitmap object to write image to
+                                // the OutputStream
+                                FileOutputStream fos = new FileOutputStream(file);
+
+                                // Writing the bitmap to the output stream
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                fos.close();
+                                Log.d(TAG + "Target", "image '" + file.getName() + "' saved");
+                            } catch (Exception e) {
+                                Log.e("saveToInternalStorage()", e.getMessage());
+                            }
+                        }
                 }
+
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-                //TODO NewsCardAdapter implement onBitmapFailed
+
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-                //TODO NewsCardAdapter implement onPrepareLoad
+
             }
         };
+
         public ViewHolder (View itemView){
             super(itemView);
             ButterKnife.inject(this, itemView);
@@ -114,8 +135,24 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
             title.setText(text);
         }
 
-        public void loadPhoto(String photoLink, Context context) {
-            picasso.load(photoLink).resize(imageWidth, imageHeight).into(target);
+        public void loadPhoto(String photoLink) {
+            fileName = Uri.parse(photoLink).getLastPathSegment();
+
+            Log.d(TAG, "loading image '"+fileName+"'");
+            File file = new File(context.get().getCacheDir(), fileName);
+            Log.d(TAG, "file path = "+file.getPath());
+
+
+            if(file.exists()){
+                Log.d(TAG, "loading image '"+fileName+"' from file, "+photoLink);
+//                picasso.load(file).resize(imageWidth, imageHeight).into(new ImageTarget(photo, null));
+                saveBitmap = false;
+                picasso.load(file).resize(imageWidth, imageHeight).into(target);
+            }else{
+                Log.d(TAG, "loading image '"+fileName+"' from network, "+photoLink);
+                saveBitmap = true;
+                picasso.load(photoLink).resize(imageWidth, imageHeight).into(target);
+            }
         }
 
         public Bitmap getPhoto(){

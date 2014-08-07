@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,6 +64,8 @@ public class NewsArticleActivity extends Activity {
      */
     public static class PlaceholderFragment extends Fragment {
         @InjectView(R.id.wv_news_article)WebView webView;
+        public String TAG = "NEWS_ARTICLE_FRAGMENT";
+
         public PlaceholderFragment() {
         }
 
@@ -81,6 +84,7 @@ public class NewsArticleActivity extends Activity {
             RSSItem article = getActivity().getIntent().getParcelableExtra(UCTConstants.BUNDLE_EXTRA_RSS_ITEM);
 
             String finalHtml = UCTConstants.html_header_body_open+"<h1>"+article.title+"</h1>"+article.description+UCTConstants.html_body_close;
+            Log.d(TAG, finalHtml);
             webView.loadDataWithBaseURL(UCTConstants.UCT_URL, finalHtml, "text/html", "UTF-8", null);
         }
 
