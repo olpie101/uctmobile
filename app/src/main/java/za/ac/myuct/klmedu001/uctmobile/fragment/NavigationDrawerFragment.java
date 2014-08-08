@@ -166,7 +166,7 @@ public class NavigationDrawerFragment extends Fragment {
                     mUserLearnedDrawer = true;
                     SharedPreferences sp = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).commit();
                 }
 
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()

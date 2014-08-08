@@ -55,8 +55,8 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     // The loader's unique id. Loader ids are specific to the Activity or
     // Fragment in which they reside.
-    private static final int NEWS_LOADER_ID = 1;
-    private static final int RSS_LOADER_ID = 2;
+    private static final int NEWS_LOADER_ID = UCTConstants.NEWS_LOADER_ID;
+    private static final int RSS_LOADER_ID = UCTConstants.RSS_LOADER_ID;
 
     /**
      * The fragment argument representing the section number for this
@@ -234,7 +234,8 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     }
                 }
                 rssFeed.putAll(tempItems);
-                saveToRssTable(tempItems);
+                if(tempItems.size() > 0)
+                    saveToRssTable(tempItems);
             }
 
             lm.destroyLoader(RSS_LOADER_ID);    //destroy rss loader
@@ -275,14 +276,14 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             lm.initLoader(NEWS_LOADER_ID, null, newsItemLoaderCallbacks);
             startedLoading = true;
             newsLoading = true;
-            Toast.makeText(getActivity(), "ref news", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "ref news", Toast.LENGTH_SHORT).show();
         }
 
         if(lm.getLoader(RSS_LOADER_ID) == null){
             lm.initLoader(RSS_LOADER_ID, null, rssItemLoaderCallbacks);
             startedLoading = true;
             rssLoading = true;
-            Toast.makeText(getActivity(), "ref rss", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "ref rss", Toast.LENGTH_SHORT).show();
         }
 
         if(!startedLoading) {
@@ -313,6 +314,8 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             ActiveAndroid.setTransactionSuccessful();
             Log.d(TAG+12, "saved to news table");
             success = true;
+        }catch (Exception e){
+            Log.d(TAG+12, "error saving to news table");
         }
         finally {
             ActiveAndroid.endTransaction();
@@ -332,6 +335,8 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             ActiveAndroid.setTransactionSuccessful();
             Log.d(TAG+12, "saved to rss table");
             success = true;
+        }catch (Exception e){
+            Log.d(TAG+12, "error saving to rss table");
         }
         finally {
             ActiveAndroid.endTransaction();

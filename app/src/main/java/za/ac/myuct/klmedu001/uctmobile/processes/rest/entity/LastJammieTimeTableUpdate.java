@@ -6,22 +6,20 @@ import java.util.GregorianCalendar;
 
 /**
  * Created by eduardokolomajr on 2014/08/08.
+ * Entity used to track when last the Jammie Timetable was updated
  */
-public class LastJammieTimeTableBracketUpdate implements Serializable{
+public class LastJammieTimeTableUpdate implements Serializable{
     Calendar date = new GregorianCalendar();
 
-    public LastJammieTimeTableBracketUpdate() {
+    @SuppressWarnings("unused")
+    public LastJammieTimeTableUpdate() {
     }
 
-    public LastJammieTimeTableBracketUpdate(Calendar date) {
+    public LastJammieTimeTableUpdate(Calendar date) {
         this.date = date;
     }
 
     public Calendar getDate() {
         return date;
-    }
-
-    public void setDate(Calendar date) {
-        this.date = date;
     }
 }

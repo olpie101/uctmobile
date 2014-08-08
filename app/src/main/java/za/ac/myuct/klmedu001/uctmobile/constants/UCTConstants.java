@@ -1,6 +1,13 @@
 package za.ac.myuct.klmedu001.uctmobile.constants;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Calendar;
 import java.util.TimeZone;
+
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.adapter.CalendarAdapter;
 
 /**
  * Created by eduardokolomajr on 2014/07/26.
@@ -29,6 +36,10 @@ public interface UCTConstants {
     public static final String RSS_FEED_DESCRIPTION_TAG = "description";
     public static final String RSS_FEED_PUB_DATE_TAG = "pubDate";
 
+    public static final int NEWS_LOADER_ID = 1;
+    public static final int RSS_LOADER_ID = 2;
+    public static final int JAMMIE_LOADER_ID = 3;
+
     public static final String BUNDLE_EXTRA_RSS_ITEM = "rss-item";
 
     public static final String SHARED_PREFS = "za.ac.myuct.klmedu001.uctmobile.MAIN_PREFS";
@@ -49,4 +60,9 @@ public interface UCTConstants {
             ".small{font-weight:normal;color:#666666;font-size:11pt;}" +
             "</style></head><body>";
     public static final String html_body_close = "</body></html>";
+
+    public static final Gson CUSTOM_GSON = new GsonBuilder()
+        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .registerTypeAdapter(Calendar.class, new CalendarAdapter())
+        .create();
 }

@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import android.app.ActionBar;
 import android.app.FragmentManager;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,26 +14,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 import za.ac.myuct.klmedu001.uctmobile.fragment.NavigationDrawerFragment;
 import za.ac.myuct.klmedu001.uctmobile.fragment.NewsFragment;
+import za.ac.myuct.klmedu001.uctmobile.processes.loaders.JammieTimeTableLoader;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.JammieService;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.LastJammieTimeTableBracketUpdate;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.adapter.LastJammieTimeTableBracketUpdateAdapter;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.LastJammieTimeTableUpdate;
 
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private final String TAG = "MainActivity";
-    private Date lastUpdate;
+    public static final int JAMMIE_LOADER_ID = UCTConstants.JAMMIE_LOADER_ID;
+    private final long timeout = 20;                //request timeout limit
+    private final TimeUnit unit = TimeUnit.SECONDS; //time unit for requests
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -61,10 +66,6 @@ public class MainActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences prefs = getSharedPreferences(UCTConstants.SHARED_PREFS, MODE_PRIVATE);
-        lastUpdate = new Date(prefs.getLong(UCTConstants.PREFS_LAST_JAMMIE_UPDATE, 0));
-        Log.d(TAG, "lastUpdate="+lastUpdate);
-
         new LastUpdateTask().execute();
     }
 
@@ -127,31 +128,61 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-    private class LastUpdateTask extends AsyncTask<Void, Integer, Void> {
+    /**
+     * Check if the Jammie timetable has been updated since last sync
+     * if so update current database
+     */
+    private class LastUpdateTask extends AsyncTask<Void, Integer, Void> implements LoaderManager.LoaderCallbacks<Boolean> {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Gson gson = new GsonBuilder()
-                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .registerTypeAdapter(LastJammieTimeTableBracketUpdate.class, new LastJammieTimeTableBracketUpdateAdapter())
-                    .create();
+            SharedPreferences prefs = getSharedPreferences(UCTConstants.SHARED_PREFS, MODE_PRIVATE);
+            Date lastUpdate = new Date(prefs.getLong(UCTConstants.PREFS_LAST_JAMMIE_UPDATE, 0));
+            Log.d(TAG, "lastUpdate="+ lastUpdate);
 
+            OkHttpClient okClient = new OkHttpClient();
+            okClient.setConnectTimeout(timeout, unit);
+            OkClient client = new OkClient(okClient);
             RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setClient(client)
                     .setEndpoint(UCTConstants.AE_URL) // The base API endpoint.
-                    .setConverter(new GsonConverter(gson))
+                    .setConverter(new GsonConverter(UCTConstants.CUSTOM_GSON))
                     .build();
 
             Log.d(TAG, "Querying Server");
             JammieService jammieService= restAdapter.create(JammieService.class);
 
-            LastJammieTimeTableBracketUpdate serverLastUpdate = jammieService.lastUpdate();
+            LastJammieTimeTableUpdate serverLastUpdate = jammieService.getLastUpdate();
 
             if(lastUpdate.compareTo(serverLastUpdate.getDate().getTime()) < 0){
-                Log.d(TAG, "Jammie timetable needs updating\n"+lastUpdate+"\nvs.\n"+serverLastUpdate.getDate().getTime());
+                Log.d(TAG, "Jammie timetable needs updating\n"+ lastUpdate +"\nvs.\n"+serverLastUpdate.getDate().getTime());
+                getLoaderManager().initLoader(JAMMIE_LOADER_ID, null, this);
             }else{
-                Log.d(TAG, "Jammie timetable !needs updating\n"+lastUpdate+"\nvs.\n"+serverLastUpdate.getDate().getTime());
+                Log.d(TAG, "Jammie timetable !needs updating\n"+ lastUpdate +"\nvs.\n"+serverLastUpdate.getDate().getTime());
             }
             return null;
+        }
+
+
+        @Override
+        public Loader<Boolean> onCreateLoader(int i, Bundle bundle) {
+            JammieTimeTableLoader jttl = new JammieTimeTableLoader(getApplicationContext());
+            jttl.loadInBackground();
+            return jttl;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Boolean> booleanLoader, Boolean success) {
+            if(success){
+                Log.d(TAG, "success");
+            }else{
+                Log.d(TAG, "failure");
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Boolean> booleanLoader) {
+
         }
     }
 }
