@@ -1,11 +1,6 @@
-package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses;
-
-import android.content.res.Resources;
-import android.graphics.Color;
+package za.ac.myuct.klmedu001.uctmobile.constants;
 
 import java.util.TimeZone;
-
-import za.ac.myuct.klmedu001.uctmobile.R;
 
 /**
  * Created by eduardokolomajr on 2014/07/26.

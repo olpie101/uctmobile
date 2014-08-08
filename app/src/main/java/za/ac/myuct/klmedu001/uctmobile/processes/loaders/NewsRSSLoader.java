@@ -1,4 +1,4 @@
-package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses;
+package za.ac.myuct.klmedu001.uctmobile.processes.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
@@ -17,6 +17,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import za.ac.myuct.klmedu001.uctmobile.constants.RSSItem;
+import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 
 /**
  * Created by eduardokolomajr on 2014/07/29.

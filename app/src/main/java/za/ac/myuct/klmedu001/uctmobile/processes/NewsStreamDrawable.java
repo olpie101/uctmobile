@@ -1,4 +1,4 @@
-package za.ac.myuct.klmedu001.uctmobile.otherconstantsandprocess;
+package za.ac.myuct.klmedu001.uctmobile.processes;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

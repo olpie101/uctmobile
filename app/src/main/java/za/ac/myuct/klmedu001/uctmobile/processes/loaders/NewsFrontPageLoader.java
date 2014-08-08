@@ -1,4 +1,4 @@
-package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses;
+package za.ac.myuct.klmedu001.uctmobile.processes.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
@@ -16,6 +16,9 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
+import za.ac.myuct.klmedu001.uctmobile.constants.NewsItem;
+import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 
 /**
  * Created by eduardokolomajr on 2014/07/26.

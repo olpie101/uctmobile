@@ -1,7 +1,6 @@
 package za.ac.myuct.klmedu001.uctmobile;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,15 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.webkit.WebView;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import za.ac.myuct.klmedu001.uctmobile.R;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.RSSItem;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.UCTConstants;
+import za.ac.myuct.klmedu001.uctmobile.constants.RSSItem;
+import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 
 public class NewsArticleActivity extends Activity {
 
@@ -78,12 +75,13 @@ public class NewsArticleActivity extends Activity {
             return rootView;
         }
 
+        //get the required html and display and load images from online
         @Override
         public void onResume() {
             super.onResume();
             RSSItem article = getActivity().getIntent().getParcelableExtra(UCTConstants.BUNDLE_EXTRA_RSS_ITEM);
 
-            String finalHtml = UCTConstants.html_header_body_open+"<div class='top-section'><h1>"+article.title+"</h1></div><p class='date'>"+article.pubDate+"</p>"+article.description+UCTConstants.html_body_close;
+            String finalHtml = createHtmlFromArticle(article);
             Log.d(TAG, finalHtml);
             webView.loadDataWithBaseURL(UCTConstants.UCT_URL, finalHtml, "text/html", "UTF-8", null);
         }
@@ -92,6 +90,18 @@ public class NewsArticleActivity extends Activity {
         public void onDestroyView() {
             super.onDestroyView();
             ButterKnife.reset(this);
+        }
+
+        /**
+         *
+         * @param item RSSItem
+         * @return Full HTML string to display in webview, styling included
+         */
+        private String createHtmlFromArticle(RSSItem item){
+            return UCTConstants.html_header_body_open+
+                    "<div class='top-section'><h1>"+item.title+"</h1></div>" +
+                    "<p class='date'>"+item.pubDate+"</p>"+item.description
+                    +UCTConstants.html_body_close;
         }
     }
 }

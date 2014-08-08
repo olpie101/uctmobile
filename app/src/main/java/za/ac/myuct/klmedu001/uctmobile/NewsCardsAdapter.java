@@ -21,16 +21,15 @@ import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.BaseApplication;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsItem;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.ottoposters.NewsCardClickedEvent;
-import za.ac.myuct.klmedu001.uctmobile.otherconstantsandprocess.NewsStreamDrawable;
+import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
+import za.ac.myuct.klmedu001.uctmobile.constants.NewsItem;
+import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.NewsCardClickedEvent;
+import za.ac.myuct.klmedu001.uctmobile.processes.NewsStreamDrawable;
 
 /**
  * Created by eduardokolomajr on 2014/07/26.

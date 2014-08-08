@@ -1,4 +1,4 @@
-package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest.adapter;
+package za.ac.myuct.klmedu001.uctmobile.processes.rest.adapter;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.UCTConstants;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest.LastJammieTimeTableBracketUpdate;
+import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.LastJammieTimeTableBracketUpdate;
 
 /**
  * Created by eduardokolomajr on 2014/08/08.

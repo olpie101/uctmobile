@@ -1,8 +1,7 @@
-package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest;
-
-import java.util.List;
+package za.ac.myuct.klmedu001.uctmobile.processes.rest;
 
 import retrofit.http.GET;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.LastJammieTimeTableBracketUpdate;
 
 /**
  * Created by eduardokolomajr on 2014/08/08.

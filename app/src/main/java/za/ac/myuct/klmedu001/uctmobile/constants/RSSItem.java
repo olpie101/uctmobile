@@ -1,4 +1,4 @@
-package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses;
+package za.ac.myuct.klmedu001.uctmobile.constants;
 
 import android.os.Parcel;
 import android.os.Parcelable;

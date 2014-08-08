@@ -1,4 +1,4 @@
-package za.ac.myuct.klmedu001.uctmobile.constantsandprocesses;
+package za.ac.myuct.klmedu001.uctmobile.constants;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;

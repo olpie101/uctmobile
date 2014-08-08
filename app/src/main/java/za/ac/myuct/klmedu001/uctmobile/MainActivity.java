@@ -20,10 +20,12 @@ import java.util.Date;
 
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.UCTConstants;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest.JammieService;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest.LastJammieTimeTableBracketUpdate;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest.adapter.LastJammieTimeTableBracketUpdateAdapter;
+import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
+import za.ac.myuct.klmedu001.uctmobile.fragment.NavigationDrawerFragment;
+import za.ac.myuct.klmedu001.uctmobile.fragment.NewsFragment;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.JammieService;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.LastJammieTimeTableBracketUpdate;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.adapter.LastJammieTimeTableBracketUpdateAdapter;
 
 
 public class MainActivity extends Activity

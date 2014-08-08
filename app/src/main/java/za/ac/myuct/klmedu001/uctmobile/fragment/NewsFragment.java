@@ -1,4 +1,4 @@
-package za.ac.myuct.klmedu001.uctmobile;
+package za.ac.myuct.klmedu001.uctmobile.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -25,19 +25,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.BaseApplication;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsFrontPageLoader;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsItem;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.NewsRSSLoader;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.RSSItem;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.UCTConstants;
-import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.ottoposters.NewsCardClickedEvent;
+import za.ac.myuct.klmedu001.uctmobile.MainActivity;
+import za.ac.myuct.klmedu001.uctmobile.NewsArticleActivity;
+import za.ac.myuct.klmedu001.uctmobile.NewsCardsAdapter;
+import za.ac.myuct.klmedu001.uctmobile.R;
+import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
+import za.ac.myuct.klmedu001.uctmobile.processes.loaders.NewsFrontPageLoader;
+import za.ac.myuct.klmedu001.uctmobile.constants.NewsItem;
+import za.ac.myuct.klmedu001.uctmobile.processes.loaders.NewsRSSLoader;
+import za.ac.myuct.klmedu001.uctmobile.constants.RSSItem;
+import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
+import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.NewsCardClickedEvent;
 
 /**
  * Created by eduardokolomajr on 2014/07/25.
