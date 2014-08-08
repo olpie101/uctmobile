@@ -83,7 +83,7 @@ public class NewsArticleActivity extends Activity {
             super.onResume();
             RSSItem article = getActivity().getIntent().getParcelableExtra(UCTConstants.BUNDLE_EXTRA_RSS_ITEM);
 
-            String finalHtml = UCTConstants.html_header_body_open+"<h1>"+article.title+"</h1>"+article.description+UCTConstants.html_body_close;
+            String finalHtml = UCTConstants.html_header_body_open+"<div class='top-section'><h1>"+article.title+"</h1></div><p class='date'>"+article.pubDate+"</p>"+article.description+UCTConstants.html_body_close;
             Log.d(TAG, finalHtml);
             webView.loadDataWithBaseURL(UCTConstants.UCT_URL, finalHtml, "text/html", "UTF-8", null);
         }

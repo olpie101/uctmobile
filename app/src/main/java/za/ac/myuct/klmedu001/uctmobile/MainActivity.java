@@ -3,26 +3,33 @@ package za.ac.myuct.klmedu001.uctmobile;
 import android.app.Activity;
 
 import android.app.ActionBar;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Date;
+
+import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
+import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.UCTConstants;
+import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest.JammieService;
+import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest.LastJammieTimeTableBracketUpdate;
+import za.ac.myuct.klmedu001.uctmobile.constantsandprocesses.rest.adapter.LastJammieTimeTableBracketUpdateAdapter;
 
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-
+    private final String TAG = "MainActivity";
+    private Date lastUpdate;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -50,6 +57,16 @@ public class MainActivity extends Activity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences(UCTConstants.SHARED_PREFS, MODE_PRIVATE);
+        lastUpdate = new Date(prefs.getLong(UCTConstants.PREFS_LAST_JAMMIE_UPDATE, 0));
+        Log.d(TAG, "lastUpdate="+lastUpdate);
+
+        new LastUpdateTask().execute();
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
@@ -67,7 +84,7 @@ public class MainActivity extends Activity
                 mTitle = getString(R.string.title_news);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.title_jammie_shuttle);
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
@@ -108,4 +125,31 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
+    private class LastUpdateTask extends AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Gson gson = new GsonBuilder()
+                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                    .registerTypeAdapter(LastJammieTimeTableBracketUpdate.class, new LastJammieTimeTableBracketUpdateAdapter())
+                    .create();
+
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint(UCTConstants.AE_URL) // The base API endpoint.
+                    .setConverter(new GsonConverter(gson))
+                    .build();
+
+            Log.d(TAG, "Querying Server");
+            JammieService jammieService= restAdapter.create(JammieService.class);
+
+            LastJammieTimeTableBracketUpdate serverLastUpdate = jammieService.lastUpdate();
+
+            if(lastUpdate.compareTo(serverLastUpdate.getDate().getTime()) < 0){
+                Log.d(TAG, "Jammie timetable needs updating\n"+lastUpdate+"\nvs.\n"+serverLastUpdate.getDate().getTime());
+            }else{
+                Log.d(TAG, "Jammie timetable !needs updating\n"+lastUpdate+"\nvs.\n"+serverLastUpdate.getDate().getTime());
+            }
+            return null;
+        }
+    }
 }
