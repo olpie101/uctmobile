@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="api-endpoints-android">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/api/build/libs/api-endpoints-android.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
