@@ -2,6 +2,7 @@ package za.ac.myuct.klmedu001.uctmobile.api.entity;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * Created by eduardokolomajr on 2014/08/04.
@@ -11,9 +12,10 @@ import com.googlecode.objectify.annotation.Id;
 public class Route {
     @Id
     Long id;              //Id
+    @Index
     String name;            //Route name
-    String displayCode;     //actual code to display
-    String code;            //internal code
+    String displayCode;     //actual code to display (code seen on jammie timetables publically)
+    String code;            //internal code (code used to differentiate between the different types and day times)
     String operatingDays;   //days set for operation
 
     public Route(){
@@ -42,6 +44,10 @@ public class Route {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getDisplayCode() { return displayCode; }
+
+    public void setDisplayCode(String displayCode) { this.displayCode = displayCode; }
 
     public String getCode() {
         return code;

@@ -4,26 +4,20 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.OkHttpClient;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
+import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.JammieEndpoint;
+import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRoutes;
+import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.JammieTimeTableBracketTransformed;
+import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.Route;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.JammieService;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.adapter.CalendarAdapter;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.AllRoutes;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.AllRoutesContainer;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.JammieTimeTableBracketContainer;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.JammieTimeTablePeriod;
+
 
 /**
  * Created by eduardokolomajr on 2014/08/08.
@@ -32,6 +26,7 @@ public class JammieTimeTableLoader extends AsyncTaskLoader<Boolean> {
     private final long timeout = 20;                //request timeout limit
     private final TimeUnit unit = TimeUnit.SECONDS; //time unit for requests
     private final String TAG = "JammieTimeTableLoader";
+    private static JammieEndpoint myApiJammieService = null;
 
     // We hold a reference to the Loader’s success here.
     boolean success = false;
@@ -59,11 +54,18 @@ public class JammieTimeTableLoader extends AsyncTaskLoader<Boolean> {
 
         // This method is called on a background thread and should generate a
         // new set of data to be delivered back to the client.
+
+
+        List<JammieTimeTableBracketTransformed> timeTableBrackets;
         List<AllRoutes> allRoutes;
-        List<JammieTimeTablePeriod> timePeriods;
+        List<Route> routes;
+
+        List<JammieTimeTableBracketContainer> timeTableBracketContainers;
+        List<AllRoutesContainer> allRoutesContainers;
+        List<RouteContainer> routeContainers;
 
         // TODO: Perform the query here and add the results to 'data'.
-        try{
+        /*try{
 
             OkHttpClient okClient = new OkHttpClient();
             okClient.setConnectTimeout(timeout, unit);
@@ -98,8 +100,37 @@ public class JammieTimeTableLoader extends AsyncTaskLoader<Boolean> {
 
         }
 
-        Log.d(TAG, "BG end");
+        Log.d(TAG, "BG end");*/
 
+        if(myApiJammieService == null) {
+            JammieEndpoint.Builder builder = UCTConstants.jammieEndpointBuilder;
+            myApiJammieService = builder.build();
+        }
+
+        try {
+
+            timeTableBrackets = myApiJammieService.getTimeTableBrackets().execute().getItems();
+
+            for (JammieTimeTableBracketTransformed timeTableBracket : timeTableBrackets) {
+                Log.d(TAG+"Bracket", timeTableBracket.getType()+" =>"+timeTableBracket.getStart());
+                
+
+            }
+
+            myApiJammieService.createAllRoutes().execute();
+
+            allRoutes = myApiJammieService.getAllRoutes().execute().getItems();
+
+            for (za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRoutes allRoute : allRoutes) {
+                Log.d(TAG+"AllRoutes", allRoute.getRoute());
+            }
+
+        } catch (IOException e) {
+            Log.d(TAG+"error","Error loading jammies");
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "done loading Jammies");
         return success;
     }
 

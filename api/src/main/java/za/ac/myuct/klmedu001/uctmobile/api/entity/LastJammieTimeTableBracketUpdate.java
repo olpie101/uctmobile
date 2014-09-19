@@ -1,5 +1,6 @@
 package za.ac.myuct.klmedu001.uctmobile.api.entity;
 
+import com.google.api.server.spi.config.ApiTransformer;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -8,10 +9,13 @@ import com.googlecode.objectify.annotation.Serialize;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import za.ac.myuct.klmedu001.uctmobile.api.entity.transformer.LastJammieTimeTableBracketUpdateTransformer;
+
 /**
  * Created by eduardokolomajr on 2014/08/07.
  */
 @Entity
+@ApiTransformer(LastJammieTimeTableBracketUpdateTransformer.class)
 public class LastJammieTimeTableBracketUpdate {
     @Id
     Long id;

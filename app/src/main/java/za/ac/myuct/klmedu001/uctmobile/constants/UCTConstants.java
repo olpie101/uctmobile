@@ -1,12 +1,18 @@
 package za.ac.myuct.klmedu001.uctmobile.constants;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.JammieEndpoint;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.adapter.CalendarAdapter;
 
 /**
@@ -18,6 +24,7 @@ public interface UCTConstants {
     public static final String UCT_MONDAY_PAPER_URL = UCT_URL+"/mondaypaper/rss/";
 //    public static final String UCT_URL = "http://localhost/~eduardokolomajr/www.uct.ac.za";
 //    public static final String UCT_URL = "http://192.168.56.1/~eduardokolomajr/www.uct.ac.za/";
+    public static final String API_URL = "http://10.0.3.2:8080/_ah/api";
     public static final String HOMEPAGE_FEATURED_STORIES_CONTAINER = "#slider";
     public static final String HOMEPAGE_FEATURED_STORIES_ITEM = "li";
     public static final String HOMEPAGE_STORIES_CONTAINER = "#hp_main_holder";
@@ -65,4 +72,14 @@ public interface UCTConstants {
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .registerTypeAdapter(Calendar.class, new CalendarAdapter())
         .create();
+
+    public static final JammieEndpoint.Builder jammieEndpointBuilder = new JammieEndpoint.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+            .setRootUrl(UCTConstants.API_URL)
+            .setApplicationName("myApplicationId")
+            .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                @Override
+                public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                    abstractGoogleClientRequest.setDisableGZipContent(true);
+                }
+            });
 }

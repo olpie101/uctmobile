@@ -16,12 +16,15 @@ import android.support.v4.widget.DrawerLayout;
 
 import com.squareup.okhttp.OkHttpClient;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
+import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.JammieEndpoint;
+import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.LastJammieTimeTableBracketUpdateTransformed;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 import za.ac.myuct.klmedu001.uctmobile.fragment.NavigationDrawerFragment;
 import za.ac.myuct.klmedu001.uctmobile.fragment.NewsFragment;
@@ -137,7 +140,7 @@ public class MainActivity extends Activity
         @Override
         protected Void doInBackground(Void... voids) {
             SharedPreferences prefs = getSharedPreferences(UCTConstants.SHARED_PREFS, MODE_PRIVATE);
-            Date lastUpdate = new Date(prefs.getLong(UCTConstants.PREFS_LAST_JAMMIE_UPDATE, 0));
+            long lastUpdate = prefs.getLong(UCTConstants.PREFS_LAST_JAMMIE_UPDATE, 0);
             Log.d(TAG, "lastUpdate="+ lastUpdate);
 
             OkHttpClient okClient = new OkHttpClient();
@@ -150,16 +153,22 @@ public class MainActivity extends Activity
                     .build();
 
             Log.d(TAG, "Querying Server");
-            JammieService jammieService= restAdapter.create(JammieService.class);
+            JammieEndpoint jammieEndpointService = UCTConstants.jammieEndpointBuilder.build();
 
-            LastJammieTimeTableUpdate serverLastUpdate = jammieService.getLastUpdate();
+            LastJammieTimeTableBracketUpdateTransformed serverLastUpdate;
 
-            if(lastUpdate.compareTo(serverLastUpdate.getDate().getTime()) < 0){
-                Log.d(TAG, "Jammie timetable needs updating\n"+ lastUpdate +"\nvs.\n"+serverLastUpdate.getDate().getTime());
-                getLoaderManager().initLoader(JAMMIE_LOADER_ID, null, this);
-            }else{
-                Log.d(TAG, "Jammie timetable !needs updating\n"+ lastUpdate +"\nvs.\n"+serverLastUpdate.getDate().getTime());
+            try {
+                serverLastUpdate = jammieEndpointService.getLastUpdate().execute();
+                if(lastUpdate < serverLastUpdate.getDate()){
+                    Log.d(TAG, "Jammie timetable needs updating\n"+ lastUpdate +"\nvs.\n"+serverLastUpdate.getDate());
+                    getLoaderManager().initLoader(JAMMIE_LOADER_ID, null, this);
+                }else{
+                    Log.d(TAG, "Jammie timetable !needs updating\n"+ lastUpdate +"\nvs.\n"+serverLastUpdate.getDate());
+                }
+            } catch (IOException e) {
+                Log.d(TAG, "Error getting last update time");
             }
+
             return null;
         }
 

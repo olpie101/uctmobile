@@ -3,7 +3,7 @@ package za.ac.myuct.klmedu001.uctmobile.processes.rest;
 import java.util.List;
 
 import retrofit.http.GET;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.AllRoutes;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.AllRoutesSQLiteAdapter;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.JammieTimeTablePeriod;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.LastJammieTimeTableUpdate;
 
@@ -18,5 +18,5 @@ public interface JammieService {
     List<JammieTimeTablePeriod> getTimePeriods();
 
     @GET("/service/routes/get-all-routes")
-    List<AllRoutes> getAllRoutes();
+    List<AllRoutesSQLiteAdapter> getAllRoutes();
 }

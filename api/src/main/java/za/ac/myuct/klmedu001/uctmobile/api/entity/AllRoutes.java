@@ -8,7 +8,7 @@ import com.googlecode.objectify.annotation.Index;
  * Created by eduardokolomajr on 2014/08/05.
  */
 @Entity
-public class AllRoutes {
+public class AllRoutes{
     @Id
     @Index
     String route;
@@ -41,8 +41,8 @@ public class AllRoutes {
     @Override
     public String toString() {
         return "AllRoutes{" +
-                "route='" + route + '\'' +
-                ", displayCode='" + displayCode + '\'' +
+                "route='" + route + "'" +
+                ", displayCode='" + displayCode + "'" +
                 '}';
     }
 }

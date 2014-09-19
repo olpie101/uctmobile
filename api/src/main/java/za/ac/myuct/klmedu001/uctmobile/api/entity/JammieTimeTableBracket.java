@@ -1,11 +1,15 @@
 package za.ac.myuct.klmedu001.uctmobile.api.entity;
 
+import com.google.api.server.spi.config.ApiTransformer;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Serialize;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import za.ac.myuct.klmedu001.uctmobile.api.entity.transformer.JammieTimeTableBracketTransformer;
 
 /**
  * Created by eduardokolomajr on 2014/08/07.
@@ -13,6 +17,7 @@ import java.util.Calendar;
  * (ie. term time table: 21 July 2014 - 29 August 2014)
  */
 @Entity
+@ApiTransformer(JammieTimeTableBracketTransformer.class)
 public class JammieTimeTableBracket {
     @Id
     @Index
@@ -22,7 +27,7 @@ public class JammieTimeTableBracket {
 
     public JammieTimeTableBracket() {}
 
-    public JammieTimeTableBracket(String type, Calendar start, Calendar end) {
+    public JammieTimeTableBracket(String type, GregorianCalendar start, GregorianCalendar end) {
         this.type = type;
         this.start = start;
         this.end = end;
@@ -51,6 +56,8 @@ public class JammieTimeTableBracket {
     public void setEnd(Calendar end) {
         this.end = end;
     }
+
+
 
     @Override
     public String toString() {

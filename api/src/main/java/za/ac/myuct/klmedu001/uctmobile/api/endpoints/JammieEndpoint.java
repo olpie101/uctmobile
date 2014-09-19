@@ -1,10 +1,17 @@
 package za.ac.myuct.klmedu001.uctmobile.api.endpoints;
 
+import com.google.api.server.spi.SystemServiceServlet;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.ConflictException;
+import com.google.api.server.spi.response.NotFoundException;
 
+import java.applet.AppletContext;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -14,12 +21,15 @@ import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 
 import static za.ac.myuct.klmedu001.uctmobile.api.OfyService.ofy;
 
 import za.ac.myuct.klmedu001.uctmobile.api.entity.AllRoutes;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.JammieTimeTableBracket;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.LastJammieTimeTableBracketUpdate;
+import za.ac.myuct.klmedu001.uctmobile.api.entity.Route;
+import za.ac.myuct.klmedu001.uctmobile.api.entity.transformed.LastJammieTimeTableBracketUpdateTransformed;
 
 /**
  * Created by eduardokolomajr on 2014/09/16.
@@ -70,7 +80,7 @@ public class JammieEndpoint {
         routes.add(new AllRoutes("Mowbray", "8"));
         routes.add(new AllRoutes("Obz Square", "9C"));
         routes.add(new AllRoutes("Residence Loop", "9B"));
-        routes.add(new AllRoutes("Rochester", "7A"));
+        routes.add(new AllRoutes("Rochester", "7"));
         routes.add(new AllRoutes("Sandown", "3"));
         routes.add(new AllRoutes("Tugwell", "4"));
 
@@ -107,8 +117,8 @@ public class JammieEndpoint {
         List<JammieTimeTableBracket> brackets = new ArrayList<JammieTimeTableBracket>();
         TimeZone SAST = TimeZone.getTimeZone("Africa/Johannesburg");
 
-        Calendar start = new GregorianCalendar();
-        Calendar end = new GregorianCalendar(2014, 8, 31);
+        GregorianCalendar start = new GregorianCalendar();
+        GregorianCalendar end = new GregorianCalendar(2014, 8, 31);
         start.setTimeZone(SAST);
         end.setTimeZone(SAST);
         brackets.add(new JammieTimeTableBracket("pilot", start, end));
@@ -128,5 +138,35 @@ public class JammieEndpoint {
         ofy().save().entities(brackets).now();
         ofy().save().entity(new LastJammieTimeTableBracketUpdate(new GregorianCalendar()));
         return brackets;
+    }
+
+    @ApiMethod(name = "createRoutes")
+    public List<Route> createRoutes() throws ConflictException {
+        File f = new File("assets/JammieRoutes.csv");
+        ArrayList<Route> routes = new ArrayList<Route>();
+        if(f.exists()){
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                String line;
+                while((line = br.readLine()) != null){
+                    String [] entry = line.split(",");
+                    routes.add(new Route(entry[0], entry[1], entry[2], entry[3].replaceAll(";", ",")));
+                }
+                ofy().save().entities(routes).now();
+            }catch(IOException e){
+                throw new ConflictException("error creating routes");
+            }
+
+        }
+        return routes;
+    }
+
+    @ApiMethod(name = "setUpEnvironment")
+    public LastJammieTimeTableBracketUpdate setUpEnvironment () throws ConflictException {
+        createTimeTableBrackets();
+        createAllRoutes();
+        createRoutes();
+
+        return getLastUpdate();
     }
 }
