@@ -11,6 +11,7 @@ import za.ac.myuct.klmedu001.uctmobile.api.entity.AllRoutes;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.JammieTimeTableBracket;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.LastJammieTimeTableBracketUpdate;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.Route;
+import za.ac.myuct.klmedu001.uctmobile.api.entity.RouteTime;
 
 /**
  * Objectify service wrapper so we can statically register our persistence classes
@@ -24,6 +25,7 @@ public class OfyService {
         ObjectifyService.register(Route.class);
         ObjectifyService.register(JammieTimeTableBracket.class);
         ObjectifyService.register(LastJammieTimeTableBracketUpdate.class);
+        ObjectifyService.register(RouteTime.class);
     }
 
     public static Objectify ofy() {

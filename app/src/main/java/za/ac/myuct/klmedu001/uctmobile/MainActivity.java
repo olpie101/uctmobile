@@ -1,23 +1,21 @@
 package za.ac.myuct.klmedu001.uctmobile;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.widget.DrawerLayout;
 
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.RestAdapter;
@@ -26,11 +24,10 @@ import retrofit.converter.GsonConverter;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.JammieEndpoint;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.LastJammieTimeTableBracketUpdateTransformed;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
+import za.ac.myuct.klmedu001.uctmobile.fragment.JammieFragment;
 import za.ac.myuct.klmedu001.uctmobile.fragment.NavigationDrawerFragment;
 import za.ac.myuct.klmedu001.uctmobile.fragment.NewsFragment;
 import za.ac.myuct.klmedu001.uctmobile.processes.loaders.JammieTimeTableLoader;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.JammieService;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.LastJammieTimeTableUpdate;
 
 
 public class MainActivity extends Activity
@@ -76,23 +73,29 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
-        switch(position+1) {
+        switch(position) {
+            case 0:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, NewsFragment.newInstance(position))
+                        .commit();
+                break;
             case 1:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, NewsFragment.newInstance(position + 1))
+                        .replace(R.id.container, JammieFragment.newInstance(position))
                         .commit();
+                break;
         }
     }
 
     public void onSectionAttached(int number) {
         switch (number) {
-            case 1:
+            case 0:
                 mTitle = getString(R.string.title_news);
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.title_jammie_shuttle);
                 break;
-            case 3:
+            case 2:
                 mTitle = getString(R.string.title_section3);
                 break;
         }
@@ -143,15 +146,6 @@ public class MainActivity extends Activity
             long lastUpdate = prefs.getLong(UCTConstants.PREFS_LAST_JAMMIE_UPDATE, 0);
             Log.d(TAG, "lastUpdate="+ lastUpdate);
 
-            OkHttpClient okClient = new OkHttpClient();
-            okClient.setConnectTimeout(timeout, unit);
-            OkClient client = new OkClient(okClient);
-            RestAdapter restAdapter = new RestAdapter.Builder()
-                    .setClient(client)
-                    .setEndpoint(UCTConstants.AE_URL) // The base API endpoint.
-                    .setConverter(new GsonConverter(UCTConstants.CUSTOM_GSON))
-                    .build();
-
             Log.d(TAG, "Querying Server");
             JammieEndpoint jammieEndpointService = UCTConstants.jammieEndpointBuilder.build();
 
@@ -160,10 +154,10 @@ public class MainActivity extends Activity
             try {
                 serverLastUpdate = jammieEndpointService.getLastUpdate().execute();
                 if(lastUpdate < serverLastUpdate.getDate()){
-                    Log.d(TAG, "Jammie timetable needs updating\n"+ lastUpdate +"\nvs.\n"+serverLastUpdate.getDate());
+                    Log.d(TAG, "Jammie timetable needs updating\n");
                     getLoaderManager().initLoader(JAMMIE_LOADER_ID, null, this);
                 }else{
-                    Log.d(TAG, "Jammie timetable !needs updating\n"+ lastUpdate +"\nvs.\n"+serverLastUpdate.getDate());
+                    Log.d(TAG, "Jammie timetable !needs updating\n");
                 }
             } catch (IOException e) {
                 Log.d(TAG, "Error getting last update time");

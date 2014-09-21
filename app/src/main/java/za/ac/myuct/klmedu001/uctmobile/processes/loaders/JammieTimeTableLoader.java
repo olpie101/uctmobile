@@ -2,9 +2,14 @@ package za.ac.myuct.klmedu001.uctmobile.processes.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Delete;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -12,10 +17,13 @@ import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.JammieEndpoi
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRoutes;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.JammieTimeTableBracketTransformed;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.Route;
+import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.RouteTime;
+import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.AllRoutesContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.JammieTimeTableBracketContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteContainer;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteTimeContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.JammieTimeTablePeriod;
 
 
@@ -56,13 +64,15 @@ public class JammieTimeTableLoader extends AsyncTaskLoader<Boolean> {
         // new set of data to be delivered back to the client.
 
 
-        List<JammieTimeTableBracketTransformed> timeTableBrackets;
+        List<JammieTimeTableBracketTransformed> timeTableBrackets ;
         List<AllRoutes> allRoutes;
         List<Route> routes;
+        List<RouteTime> routeTimes;
 
-        List<JammieTimeTableBracketContainer> timeTableBracketContainers;
-        List<AllRoutesContainer> allRoutesContainers;
-        List<RouteContainer> routeContainers;
+        List<JammieTimeTableBracketContainer> timeTableBracketContainers = new ArrayList<JammieTimeTableBracketContainer>();
+        List<AllRoutesContainer> allRoutesContainers = new ArrayList<AllRoutesContainer>();
+        List<RouteContainer> routeContainers = new ArrayList<RouteContainer>();
+        List<RouteTimeContainer> routeTimeContainers = new ArrayList<RouteTimeContainer>();
 
         // TODO: Perform the query here and add the results to 'data'.
         /*try{
@@ -108,21 +118,73 @@ public class JammieTimeTableLoader extends AsyncTaskLoader<Boolean> {
         }
 
         try {
+//            myApiJammieService.setUpEnvironment().execute();
 
             timeTableBrackets = myApiJammieService.getTimeTableBrackets().execute().getItems();
 
             for (JammieTimeTableBracketTransformed timeTableBracket : timeTableBrackets) {
-                Log.d(TAG+"Bracket", timeTableBracket.getType()+" =>"+timeTableBracket.getStart());
-                
-
+//                Log.d(TAG+"Bracket", timeTableBracket.getType()+" =>"+timeTableBracket.getStart());
+                timeTableBracketContainers.add(new JammieTimeTableBracketContainer(timeTableBracket));
             }
-
-            myApiJammieService.createAllRoutes().execute();
+            timeTableBrackets.clear();
 
             allRoutes = myApiJammieService.getAllRoutes().execute().getItems();
 
-            for (za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRoutes allRoute : allRoutes) {
-                Log.d(TAG+"AllRoutes", allRoute.getRoute());
+            for (AllRoutes allRoute : allRoutes) {
+//                Log.d(TAG+"AllRoutes", allRoute.getRoute());
+                allRoutesContainers.add(new AllRoutesContainer(allRoute));
+            }
+            allRoutes.clear();
+
+            routes = myApiJammieService.getRoutes().execute().getItems();
+
+            for(Route route : routes){
+//                Log.d(TAG+"Routes", route.getName());
+                routeContainers.add(new RouteContainer(route));
+            }
+            routes.clear();
+
+            routeTimes = myApiJammieService.getRouteTime().execute().getItems();
+
+            for(RouteTime routeTime : routeTimes) {
+//                Log.d(TAG + "RouteTime", routeTime.getRoutecode());
+                routeTimeContainers.add(new RouteTimeContainer(routeTime));
+            }
+            routeTimes.clear();
+
+            long lastUpdateTime = myApiJammieService.getLastUpdate().execute().getDate();
+
+            new Delete().from(JammieTimeTableBracketContainer.class).execute();
+            new Delete().from(AllRoutesContainer.class).execute();
+            new Delete().from(RouteContainer.class).execute();
+            new Delete().from(RouteTimeContainer.class).execute();
+
+            ActiveAndroid.beginTransaction();
+            try {
+                for(JammieTimeTableBracketContainer bracket: timeTableBracketContainers){
+                    bracket.save();
+                }
+
+                for (AllRoutesContainer routeTimeContainer : allRoutesContainers) {
+                    routeTimeContainer.save();
+                }
+
+                for (RouteContainer routeContainer : routeContainers) {
+                    routeContainer.save();
+                }
+
+                for (RouteTimeContainer routeTimeContainer : routeTimeContainers) {
+                    routeTimeContainer.save();
+                }
+
+                ActiveAndroid.setTransactionSuccessful();
+                SharedPreferences prefs = getContext()
+                        .getSharedPreferences(UCTConstants.SHARED_PREFS, getContext().MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putLong(UCTConstants.PREFS_LAST_JAMMIE_UPDATE, lastUpdateTime);
+                editor.apply();
+            }finally {
+                ActiveAndroid.endTransaction();
             }
 
         } catch (IOException e) {

@@ -14,18 +14,53 @@ import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.Route;
  */
 @Table(name = "route")
 public class RouteContainer extends Model implements Parcelable {
-    @Column String name;            //Route name
-    @Column String displayCode;     //actual code to display (code seen on jammie timetables publically)
-    @Column String code;            //internal code (code used to differentiate between the different types and day times)
-    @Column String operatingDays;   //days set for operation
+    @Column private String name;            //Route name
+    @Column private String displayCode;     //actual code to display (code seen on jammie timetables publically)
+    @Column private String code;            //internal code (code used to differentiate between the different types and day times)
+    @Column private String operatingDays;   //days set for operation
+
+    @SuppressWarnings("unused")
+    public RouteContainer(){super();}
 
     public RouteContainer(Route in){
+        super();
         this.name = in.getName();
         this.displayCode = in.getDisplayCode();
         this.code = in.getCode();
         this.operatingDays = in.getOperatingDays();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDisplayCode() {
+        return displayCode;
+    }
+
+    public void setDisplayCode(String displayCode) {
+        this.displayCode = displayCode;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getOperatingDays() {
+        return operatingDays;
+    }
+
+    public void setOperatingDays(String operatingDays) {
+        this.operatingDays = operatingDays;
+    }
 
     @Override
     public int describeContents() {

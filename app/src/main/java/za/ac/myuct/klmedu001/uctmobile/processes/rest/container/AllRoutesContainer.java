@@ -14,14 +14,33 @@ import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRou
  */
 @Table(name = "allRoutes")
 public class AllRoutesContainer extends Model implements Parcelable {
-    @Column String route;
-    @Column String displayCode;
+    @Column private String route;
+    @Column private String displayCode;
+
+    @SuppressWarnings("unused")
+    public AllRoutesContainer(){super();}
 
     public AllRoutesContainer(AllRoutes in){
+        super();
         this.route = in.getRoute();
         this.displayCode = in.getDisplayCode();
     }
 
+    public String getRoute() {
+        return route;
+    }
+
+    public void setRoute(String route) {
+        this.route = route;
+    }
+
+    public String getDisplayCode() {
+        return displayCode;
+    }
+
+    public void setDisplayCode(String displayCode) {
+        this.displayCode = displayCode;
+    }
 
     @Override
     public int describeContents() {

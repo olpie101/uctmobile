@@ -14,19 +14,43 @@ import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.Jammie
  */
 @Table(name = "jammieTimeTableBrackets")
 public class JammieTimeTableBracketContainer extends Model implements Parcelable {
-    @Column public String type;
-    @Column public long start;
-    @Column public long end;
+    @Column private String type;
+    @Column private long start;
+    @Column private long end;
 
     @SuppressWarnings("unused")
-    public JammieTimeTableBracketContainer(){}
+    public JammieTimeTableBracketContainer(){super();}
 
     public JammieTimeTableBracketContainer(JammieTimeTableBracketTransformed in){
+        super();
         type = in.getType();
         start = in.getStart();
         end = in.getEnd();
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public long getEnd() {
+        return end;
+    }
+
+    public void setEnd(long end) {
+        this.end = end;
+    }
 
     @Override
     public int describeContents() {

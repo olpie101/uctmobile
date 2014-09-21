@@ -13,6 +13,7 @@
     <dimen name="list_item_height_small">48dp</dimen>
     <dimen name="list_item_section_divider_height">8dp</dimen>
     <dimen name="list_item_detailed_view_height">72dp</dimen>
+    <dimen name="standard_padding">16dp</dimen>
 
     <dimen name="text_size_display4">112sp</dimen>
     <dimen name="text_size_display3">56sp</dimen>

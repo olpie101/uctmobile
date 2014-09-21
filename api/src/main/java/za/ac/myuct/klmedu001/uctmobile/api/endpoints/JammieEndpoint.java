@@ -29,6 +29,7 @@ import za.ac.myuct.klmedu001.uctmobile.api.entity.AllRoutes;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.JammieTimeTableBracket;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.LastJammieTimeTableBracketUpdate;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.Route;
+import za.ac.myuct.klmedu001.uctmobile.api.entity.RouteTime;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.transformed.LastJammieTimeTableBracketUpdateTransformed;
 
 /**
@@ -107,8 +108,7 @@ public class JammieEndpoint {
      */
     @ApiMethod(name = "getTimeTableBrackets")
     public List<JammieTimeTableBracket> getTimeTableBrackets(){
-        List<JammieTimeTableBracket> list = ofy().load().type(JammieTimeTableBracket.class).orderKey(false).list();
-        return list;
+        return ofy().load().type(JammieTimeTableBracket.class).orderKey(false).list();
     }
 
     @ApiMethod (name="createTimeTableBrackets")
@@ -161,11 +161,42 @@ public class JammieEndpoint {
         return routes;
     }
 
+    @ApiMethod(name = "getRoutes")
+    public List<Route> getRoutes(){
+        return ofy().load().type(Route.class).list();
+    }
+
+    @ApiMethod(name = "createRouteTimes")
+    public List<RouteTime> createRouteTimes () throws ConflictException {
+        File f = new File("assets/RouteTimes.csv");
+        ArrayList<RouteTime> routeTimes= new ArrayList<RouteTime>();
+        if(f.exists()){
+            try{
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                String line;
+                while((line = br.readLine()) != null){
+                    String [] entry = line.split(",");
+                    routeTimes.add(new RouteTime(entry[0], entry[1], entry[2], entry[3], entry[4].replaceAll(";", ",")));
+                }
+                ofy().save().entities(routeTimes).now();
+            }catch(IOException e){
+                throw new ConflictException("error creating routeTimes");
+            }
+        }
+        return routeTimes;
+    }
+
+    @ApiMethod(name = "getRouteTime")
+    public List<RouteTime> getRouteTimes(){
+        return ofy().load().type(RouteTime.class).list();
+    }
+
     @ApiMethod(name = "setUpEnvironment")
     public LastJammieTimeTableBracketUpdate setUpEnvironment () throws ConflictException {
         createTimeTableBrackets();
         createAllRoutes();
         createRoutes();
+        createRouteTimes();
 
         return getLastUpdate();
     }

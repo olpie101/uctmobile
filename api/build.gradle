@@ -41,7 +41,7 @@ appengine {
     email = "junykol22@gmail.com"
   }
   endpoints {
-    getClientLibsOnBuild = true
-    getDiscoveryDocsOnBuild = true
+//    getClientLibsOnBuild = true
+//    getDiscoveryDocsOnBuild = true
   }
 }

@@ -1,6 +1,7 @@
 package za.ac.myuct.klmedu001.uctmobile.constants;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.activeandroid.ActiveAndroid;
 import com.squareup.otto.Bus;

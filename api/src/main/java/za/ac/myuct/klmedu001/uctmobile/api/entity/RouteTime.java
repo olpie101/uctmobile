@@ -11,26 +11,32 @@ import com.googlecode.objectify.annotation.Index;
 public class RouteTime {
     @Id @Index
     private Long Id;
-    private String routecode;
+    private String bracket;
+    private String routeCode;
     private String operatingDayType;
     private String routeStop;
     private String routeTimes;
 
     public RouteTime(){};
 
-    public RouteTime(String routecode, String operatingDayType, String routeStop, String routeTimes) {
-        this.routecode = routecode;
+    public RouteTime(String bracket, String routecode, String operatingDayType, String routeStop, String routeTimes) {
+        this.bracket = bracket;
+        this.routeCode = routecode;
         this.operatingDayType = operatingDayType;
         this.routeStop = routeStop;
         this.routeTimes = routeTimes;
     }
 
-    public String getRoutecode() {
-        return routecode;
+    public String getBracket() { return bracket; }
+
+    public void setBracket(String bracket) { this.bracket = bracket; }
+
+    public String getRouteCode() {
+        return routeCode;
     }
 
-    public void setRoutecode(String routecode) {
-        this.routecode = routecode;
+    public void setRouteCode(String routeCode) {
+        this.routeCode = routeCode;
     }
 
     public String getOperatingDayType() {
@@ -60,10 +66,12 @@ public class RouteTime {
     @Override
     public String toString() {
         return "RouteTime{" +
-                "routeTimes='" + routeTimes + '\'' +
-                ", routeStop='" + routeStop + '\'' +
+                "Id=" + Id +
+                ", bracket='" + bracket + '\'' +
+                ", routeCode='" + routeCode + '\'' +
                 ", operatingDayType='" + operatingDayType + '\'' +
-                ", routecode='" + routecode + '\'' +
+                ", routeStop='" + routeStop + '\'' +
+                ", routeTimes='" + routeTimes + '\'' +
                 '}';
     }
 }
