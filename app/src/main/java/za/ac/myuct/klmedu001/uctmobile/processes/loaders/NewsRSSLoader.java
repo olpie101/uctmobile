@@ -193,7 +193,8 @@ public class NewsRSSLoader extends AsyncTaskLoader<HashMap<String, RSSItem>> {
         // For a simple List, there is nothing to do. For something like a Cursor, we
         // would close it in this method. All resources associated with the Loader
         // should be released here.
-        data.clear();
+        if (data != null)
+            data.clear();
     }
 
     private ArrayList<RSSItem> parseFeed(Reader input) {

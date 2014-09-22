@@ -5,7 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.android.gms.plus.model.people.Person;
 
 import java.util.List;
 
@@ -13,42 +14,46 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
 import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.JammieAllRoutesClickedEvent;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.AllRoutesContainer;
+import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.JammieRouteClickedEvent;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteContainer;
 
 /**
- * Created by eduardokolomajr on 2014/09/21.
- * Adapter for AllRoutes
+ * Created by eduardokolomajr on 2014/09/22.
+ * Adapter for Routes
  */
-public class JammieAllRoutesAdapter extends RecyclerView.Adapter<JammieAllRoutesAdapter.ViewHolder>{
-    private List<AllRoutesContainer> items;
+public class JammieRouteAdapter extends RecyclerView.Adapter<JammieRouteAdapter.ViewHolder> {
+    private List<RouteContainer> route;
 
-    public JammieAllRoutesAdapter(List<AllRoutesContainer> items) {
-        this.items = items;
+    public JammieRouteAdapter(List<RouteContainer> route) {
+        this.route = route;
     }
 
     @Override
-    public JammieAllRoutesAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.textview_jammie_list_item, viewGroup, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(JammieAllRoutesAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.routeName.setText(items.get(i).getRoute());
-        viewHolder.displayCode = items.get(i).getDisplayCode();
+    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+        viewHolder.route.setText(route.get(i).getName());
+        viewHolder.displayCode = route.get(i).getDisplayCode();
+        viewHolder.code = route.get(i).getCode();
         viewHolder.position = i;
     }
 
     @Override
     public int getItemCount() {
-        return items.size() ;
+        return route.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @InjectView(android.R.id.text1)
-        TextView routeName;
+        TextView route;
         String displayCode;
+        String code;
         int position;
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
@@ -57,8 +62,7 @@ public class JammieAllRoutesAdapter extends RecyclerView.Adapter<JammieAllRoutes
 
         @Override
         public void onClick(View view) {
-//            Toast.makeText(view.getContext(), "Item clicked #"+position, Toast.LENGTH_SHORT).show();
-            BaseApplication.getEventBus().post(new JammieAllRoutesClickedEvent(displayCode, position));
+            BaseApplication.getEventBus().post(new JammieRouteClickedEvent(displayCode, code, position));
         }
     }
 }

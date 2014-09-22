@@ -9,14 +9,8 @@
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_subhead"
-        android:gravity="center_vertical"
-        android:paddingStart="@dimen/standard_padding"
-        android:paddingEnd="@dimen/standard_padding"
-        android:paddingLeft="@dimen/standard_padding"
-        android:paddingRight="@dimen/standard_padding"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:background="@drawable/jammie_statedrawable"
+        style="@style/jammieListItemStyle"
         />
 
 </LinearLayout>

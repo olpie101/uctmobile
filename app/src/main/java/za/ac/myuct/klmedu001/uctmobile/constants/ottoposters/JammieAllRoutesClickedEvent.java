@@ -5,8 +5,10 @@ package za.ac.myuct.klmedu001.uctmobile.constants.ottoposters;
  */
 public class JammieAllRoutesClickedEvent {
     public final String displayCode;
+    public final int position;
 
-    public JammieAllRoutesClickedEvent(String displayCode) {
+    public JammieAllRoutesClickedEvent(String displayCode, int position) {
         this.displayCode = displayCode;
+        this.position = position;
     }
 }
