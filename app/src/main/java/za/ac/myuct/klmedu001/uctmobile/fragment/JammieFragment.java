@@ -1,57 +1,44 @@
 package za.ac.myuct.klmedu001.uctmobile.fragment;
 
 import android.animation.AnimatorSet;
-import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
-import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.LoaderManager;
+import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.ChangeBounds;
-import android.transition.Transition;
-import android.transition.TransitionManager;
+import android.text.format.Time;
 import android.util.Log;
-import android.util.Property;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Interpolator;
-import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import za.ac.myuct.klmedu001.uctmobile.JammieAllRoutesAdapter;
+import za.ac.myuct.klmedu001.uctmobile.JammieDaysAdapter;
 import za.ac.myuct.klmedu001.uctmobile.JammieRouteAdapter;
 import za.ac.myuct.klmedu001.uctmobile.MainActivity;
-import za.ac.myuct.klmedu001.uctmobile.NewsCardsAdapter;
 import za.ac.myuct.klmedu001.uctmobile.R;
 import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
 import za.ac.myuct.klmedu001.uctmobile.constants.LinearLayoutParamsEvaluator;
-import za.ac.myuct.klmedu001.uctmobile.constants.NewsItem;
-import za.ac.myuct.klmedu001.uctmobile.constants.RSSItem;
-import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.JammieAllRoutesClickedEvent;
+import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.JammieDaysClickedEvent;
+import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.JammieRouteClickedEvent;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.AllRoutesContainer;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.JammieTimeTableBracketContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteContainer;
 
 /**
@@ -73,13 +60,16 @@ public class JammieFragment extends Fragment{
     RecyclerView allRoutesListView;
     @InjectView(R.id.rv_jammie_routes)
     RecyclerView routesListView;
-//    @InjectView(R.id.rv_jammie_days)
-//    RecyclerView daysListView;
+    @InjectView(R.id.rv_jammie_days)
+    RecyclerView daysListView;
 
     List<AllRoutesContainer> allRoutes;
     List<RouteContainer> routes;
 
-    public enum Type {MAP, ALLROUTES, ROUTES, DAYS}
+    enum Type {MAP, ALLROUTES, ROUTES, DAYS}
+    private String selectedDisplayCode = "";
+    private String selectedCode = "";
+    private char selectDay = '\0';
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -118,6 +108,9 @@ public class JammieFragment extends Fragment{
         routesListView.setLayoutManager(new LinearLayoutManager((getActivity())));
         routesListView.setAdapter(new JammieRouteAdapter(new ArrayList<RouteContainer>()));
 
+        daysListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        daysListView.setAdapter(new JammieDaysAdapter(new char [0]));
+
         return rootView;
     }
 
@@ -155,12 +148,7 @@ public class JammieFragment extends Fragment{
 
     @Subscribe
     public void onJammieRouteClicked(JammieAllRoutesClickedEvent evt){
-//        LayoutTransition transition = new LayoutTransition();
-//        transition.setInterpolator(LayoutTransition.CHANGING, new AccelerateDecelerateInterpolator());
-//        transition.setDuration(3000);
-//        container.setLayoutTransition(transition);
-
-
+        selectedDisplayCode = evt.displayCode;
         //Get AllRouteRecyclerView start and end weights and give to object animator
         ViewGroup.LayoutParams mapStartLP = mapImageView.getLayoutParams();
         LinearLayout.LayoutParams mapEndLP = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f);
@@ -186,14 +174,60 @@ public class JammieFragment extends Fragment{
 
         ObjectAnimator routesAnimator = ObjectAnimator.ofObject(routesListView, "LayoutParams",
                 new LinearLayoutParamsEvaluator(), routeStartLP, routeEndLP);
-        allRoutesAnimator.addUpdateListener(new JammieListAnimatorListener(Type.ROUTES));
-//
+        routesAnimator.addUpdateListener(new JammieListAnimatorListener(Type.ROUTES));
+
         AnimatorSet set = new AnimatorSet();
-//        set.play(allRoutesAnimator).with(mapAnimator).with(routesAnimator);
         set.playTogether(allRoutesAnimator, mapAnimator, routesAnimator);
         set.setDuration(500);
         set.start();
         Log.d(TAG, "done animating");
+    }
+
+    @Subscribe
+    public void onJammieSubRouteClicked(JammieRouteClickedEvent evt){
+        selectedCode = evt.code;
+        //Get RouteRecyclerView start and end weights and give to object animator
+        ViewGroup.LayoutParams routeStartLP = routesListView.getLayoutParams();
+        ViewGroup.LayoutParams routeEndLP = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0f);
+
+        ObjectAnimator routesAnimator = ObjectAnimator.ofObject(routesListView, "LayoutParams",
+                new LinearLayoutParamsEvaluator(), routeStartLP, routeEndLP);
+        routesAnimator.addUpdateListener(new JammieListAnimatorListener(Type.ROUTES));
+
+        RouteContainer tempRoute = new Select().from(RouteContainer.class).where("code = ?", evt.code).executeSingle();
+
+        char [] days = tempRoute.getOperatingDays().replaceAll(",","").toCharArray();
+        for (char day : days) {
+            Log.d(TAG+"days", ""+day);
+        }
+        daysListView.setAdapter(new JammieDaysAdapter(days));
+        daysListView.getAdapter().notifyDataSetChanged();
+        //Get DaysRecyclerView start and end weights and give to object animator
+        ViewGroup.LayoutParams daysStartLP = daysListView.getLayoutParams();
+        ViewGroup.LayoutParams daysEndLP = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 2.0f);
+
+        ObjectAnimator daysAnimator = ObjectAnimator.ofObject(daysListView, "LayoutParams",
+                new LinearLayoutParamsEvaluator(), daysStartLP, daysEndLP);
+        daysAnimator.addUpdateListener(new JammieListAnimatorListener(Type.DAYS));
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(routesAnimator, daysAnimator);
+        set.setDuration(500);
+        set.start();
+    }
+
+    @Subscribe
+    public void onJammieDayClicked(JammieDaysClickedEvent evt){
+        selectDay = evt.dayChar;
+        long now = new Date().getTime();
+        JammieTimeTableBracketContainer bracket = new Select().from(JammieTimeTableBracketContainer.class)
+                .where("start < ? AND end > ?", now, now).executeSingle();
+        JammieTimetableFragment fragment = JammieTimetableFragment.newInstance(bracket.getType(), selectedCode, selectDay);
+        FragmentManager ft = this.getFragmentManager();
+        ft.beginTransaction()
+                .replace(R.id.container, fragment)
+                .addToBackStack(bracket.getType()+","+selectedCode+","+selectDay)
+                .commit();
     }
 
     private class GetJammieInfoFromDatabase extends AsyncTask <Void, Void, Boolean>{
@@ -242,20 +276,14 @@ public class JammieFragment extends Fragment{
                 case ALLROUTES:
                     allRoutesListView.setLayoutParams((LinearLayout.LayoutParams)valueAnimator.getAnimatedValue());
                     break;
-//                case ROUTES:
-//                    routesListView.setLayoutParams((LinearLayout.LayoutParams)valueAnimator.getAnimatedValue());
-//                    break;
-//                case DAYS:
-//                    break;
+                case ROUTES:
+                    routesListView.setLayoutParams((LinearLayout.LayoutParams)valueAnimator.getAnimatedValue());
+                    break;
+                case DAYS:
+                    daysListView.setLayoutParams((LinearLayout.LayoutParams)valueAnimator.getAnimatedValue());
+                    break;
 
             }
-//            if(type == Type.MAP){
-//                mapImageView.setLayoutParams((LinearLayout.LayoutParams)valueAnimator.getAnimatedValue());
-//            }else if(type == Type.ALLROUTES){
-//                allRoutesListView.setLayoutParams((LinearLayout.LayoutParams)valueAnimator.getAnimatedValue());
-//            }else if(type == Type.ROUTES){
-//                routesListView.setLayoutParams((LinearLayout.LayoutParams)valueAnimator.getAnimatedValue());
-//            }
         }
     }
 }

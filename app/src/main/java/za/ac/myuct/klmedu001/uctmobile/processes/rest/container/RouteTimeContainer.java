@@ -32,6 +32,26 @@ public class RouteTimeContainer extends Model implements Parcelable {
         this.routeTimes = in.getRouteTimes();
     }
 
+    public String getBracket() { return bracket; }
+
+    public void setBracket(String bracket) { this.bracket = bracket; }
+
+    public String getRouteCode() { return routeCode; }
+
+    public void setRouteCode(String routeCode) { this.routeCode = routeCode; }
+
+    public String getOperatingDayType() { return operatingDayType; }
+
+    public void setOperatingDayType(String operatingDayType) { this.operatingDayType = operatingDayType; }
+
+    public String getRouteStop() { return routeStop; }
+
+    public void setRouteStop(String routeStop) { this.routeStop = routeStop; }
+
+    public String getRouteTimes() { return routeTimes; }
+
+    public void setRouteTimes(String routeTimes) { this.routeTimes = routeTimes; }
+
     @Override
     public int describeContents() {
         return 0;
