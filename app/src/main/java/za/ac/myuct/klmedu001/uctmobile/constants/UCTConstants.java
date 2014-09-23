@@ -24,7 +24,7 @@ public interface UCTConstants {
     public static final String UCT_MONDAY_PAPER_URL = UCT_URL+"/mondaypaper/rss/";
 //    public static final String UCT_URL = "http://localhost/~eduardokolomajr/www.uct.ac.za";
 //    public static final String UCT_URL = "http://192.168.56.1/~eduardokolomajr/www.uct.ac.za/";
-    public static final String API_URL = "http://10.0.3.2:8080/_ah/api";
+    public static final String API_URL = "http://august-bond-708.appspot.com/_ah/api/";
     public static final String HOMEPAGE_FEATURED_STORIES_CONTAINER = "#slider";
     public static final String HOMEPAGE_FEATURED_STORIES_ITEM = "li";
     public static final String HOMEPAGE_STORIES_CONTAINER = "#hp_main_holder";
@@ -75,11 +75,9 @@ public interface UCTConstants {
 
     public static final JammieEndpoint.Builder jammieEndpointBuilder = new JammieEndpoint.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
             .setRootUrl(UCTConstants.API_URL)
-            .setApplicationName("myApplicationId")
-            .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                @Override
-                public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                    abstractGoogleClientRequest.setDisableGZipContent(true);
-                }
-            });
+            .setApplicationName("august-bond-708");
+
+    public static final JammieEndpoint.Builder jammieEndpointBuilderDeployed =
+            new JammieEndpoint.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+            .setApplicationName("august-bond-708");
 }

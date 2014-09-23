@@ -128,6 +128,7 @@ public class JammieTimetableFragment extends Fragment {
             heading.setText(routeTime.getRouteStop());
             heading.setTextAppearance(getActivity(), R.style.jammieListItemStyleBold);
             heading.setGravity(Gravity.CENTER);
+            heading.setPadding(20, 10, 20, 10);
 //            heading.setLayoutParams(lp);
             headingRow.addView(heading);
         }
@@ -144,6 +145,8 @@ public class JammieTimetableFragment extends Fragment {
 //                item.setLayoutParams(lp);
                 tableRow.addView(item);
             }
+            if(row % 2 == 1)
+                tableRow.setBackgroundColor(getResources().getColor(R.color.row_darker));
             container.addView(tableRow);
         }
     }

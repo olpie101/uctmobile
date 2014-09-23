@@ -148,7 +148,7 @@ public class MainActivity extends Activity
             Log.d(TAG, "lastUpdate="+ lastUpdate);
 
             Log.d(TAG, "Querying Server");
-            JammieEndpoint jammieEndpointService = UCTConstants.jammieEndpointBuilder.build();
+            JammieEndpoint jammieEndpointService = UCTConstants.jammieEndpointBuilderDeployed.build();
 
             LastJammieTimeTableBracketUpdateTransformed serverLastUpdate;
 
@@ -162,6 +162,7 @@ public class MainActivity extends Activity
                 }
             } catch (IOException e) {
                 Log.d(TAG, "Error getting last update time");
+                Log.e(TAG, e.toString());
             }
 
             return null;

@@ -20,5 +20,6 @@
     <color name="white">#FFFFFF</color>
 
     <color name="tint_news_image">#66000000</color>
+    <color name="row_darker">#FFDDDDDD</color>
 
 </resources>

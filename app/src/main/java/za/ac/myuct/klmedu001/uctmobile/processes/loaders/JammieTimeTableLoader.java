@@ -113,7 +113,7 @@ public class JammieTimeTableLoader extends AsyncTaskLoader<Boolean> {
         Log.d(TAG, "BG end");*/
 
         if(myApiJammieService == null) {
-            JammieEndpoint.Builder builder = UCTConstants.jammieEndpointBuilder;
+            JammieEndpoint.Builder builder = UCTConstants.jammieEndpointBuilderDeployed;
             myApiJammieService = builder.build();
         }
 
