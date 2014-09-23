@@ -1,6 +1,6 @@
 # README #
 
-####NB:Clone the 'Jammies' branch. Use Android Studio or just sideload APK found within app/build/outputs####
+####NB:Clone the 'Jammies' branch for latest build. Use Android Studio or just sideload APK found within app/build/outputs####
 
 An Android UCT App which allows the user to view the University's News, Jammie Shuttle Timetable and in allow undergrads to plan out their degree.
 
