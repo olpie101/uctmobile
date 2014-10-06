@@ -18,13 +18,11 @@ import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRou
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.JammieTimeTableBracketTransformed;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.Route;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.RouteTime;
-import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.AllRoutesContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.JammieTimeTableBracketContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteTimeContainer;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.JammieTimeTablePeriod;
 
 
 /**
@@ -113,7 +111,7 @@ public class JammieTimeTableLoader extends AsyncTaskLoader<Boolean> {
         Log.d(TAG, "BG end");*/
 
         if(myApiJammieService == null) {
-            JammieEndpoint.Builder builder = UCTConstants.jammieEndpointBuilderDeployed;
+            JammieEndpoint.Builder builder = UCTConstants.jammieEndpointBuilder;
             myApiJammieService = builder.build();
         }
 

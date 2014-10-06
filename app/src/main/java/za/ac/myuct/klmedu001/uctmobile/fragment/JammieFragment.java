@@ -222,6 +222,7 @@ public class JammieFragment extends Fragment{
         long now = new Date().getTime();
         JammieTimeTableBracketContainer bracket = new Select().from(JammieTimeTableBracketContainer.class)
                 .where("start < ? AND end > ?", now, now).executeSingle();
+        Log.d(TAG+"dayClicked", bracket.getType());
         JammieTimetableFragment fragment = JammieTimetableFragment.newInstance(bracket.getType(), selectedCode, selectDay);
         FragmentManager ft = this.getFragmentManager();
         ft.beginTransaction()

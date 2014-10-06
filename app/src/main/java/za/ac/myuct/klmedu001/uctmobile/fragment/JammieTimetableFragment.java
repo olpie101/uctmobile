@@ -70,6 +70,7 @@ public class JammieTimetableFragment extends Fragment {
         }
         routeTimes = new Select().from(RouteTimeContainer.class)
                 .where("bracket = ? AND operatingDayType = ? AND routeCode = ?", period, day, code)
+                .orderBy("internalId ASC")
                 .execute();
         Log.d(TAG, "oncreate");
     }
@@ -115,7 +116,7 @@ public class JammieTimetableFragment extends Fragment {
                 new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1);
         lp.gravity = Gravity.CENTER;
         int columns = routeTimes.size();
-        int rows = routeTimes.get(0).getRouteTimes().split(",").length;
+        int rows = routeTimes.get(0).getRouteTimes().split(",").length-1;
         HashMap<String, String []> routeMap = new HashMap<String, String[]>();
         for (RouteTimeContainer routeTime : routeTimes) {
             routeMap.put(routeTime.getRouteStop(), routeTime.getRouteTimes().split(","));

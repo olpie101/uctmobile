@@ -14,6 +14,7 @@ import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.RouteT
  */
 @Table(name = "routeTime")
 public class RouteTimeContainer extends Model implements Parcelable {
+    @Column (index = true) private Long internalId;
     @Column private String bracket;
     @Column private String routeCode;
     @Column private String operatingDayType;
@@ -25,12 +26,17 @@ public class RouteTimeContainer extends Model implements Parcelable {
     }
 
     public RouteTimeContainer (RouteTime in){
+        this.internalId = in.getInternalId();
         this.bracket = in.getBracket();
         this.routeCode = in.getRouteCode();
         this.operatingDayType = in.getOperatingDayType();
         this.routeStop = in.getRouteStop();
         this.routeTimes = in.getRouteTimes();
     }
+
+    public Long getInternalId() { return internalId; }
+
+    public void setInternalId(Long internalId) { this.internalId = internalId; }
 
     public String getBracket() { return bracket; }
 

@@ -1,19 +1,1 @@
-Bremner,4B,4B,W
-Claremont,1,1,W;S;P
-Clarinus,6,6,W
-Clarinus via Rochester,6,7A,W;S
-Forest Hill,5,5,W
-Forest Hill via Liesbeeck Gardens,5,5A,W;S
-Hiddingh Hall,10,10,W
-Hiddingh Hall via Tugwell,10,10A,W;S;U;P
-Liesbeeck,9,9,W
-Med School,9C,9Ca,W
-Mowbray,8,8,W
-Obz Square,9C,9C,W
-Obz Square via Clarinus,9C,9Cb,W
-Residence Loop (Clockwise),9B,9Bc,W;S;U;P
-Residence Loop (Anti-clockwise),9B,9Ba,W;S;U;P
-Rochester,7,7,W
-Clarinus via Rochester,7,7A,W;S
-Sandown,3,3,W
-Tugwell,4,4,W;S;U;P
+Bremner,4B,4B,WClaremont,1,1,W;S;PClarinus,6,6,WClarinus via Rochester,6,7A,W;SForest Hill,5,5,WForest Hill (0700 - 0900),5,5m,WForest Hill via Liesbeeck Gardens,5,5A,W;SHiddingh Hall (via Tugwell),10,10,WHiddingh Hall (before 1800),10,10m,W;S;U;PLiesbeeck,9,9,WLiesbeeck (0700 - 0900),9,9m,WMed School,9C,9Ca,WMowbray,8,8,WObz Square,9C,9C,WObz Square via Clarinus,9C,9Cb,WResidence Loop (Clockwise),9B,9Bc,W;S;U;PResidence Loop (Anti-clockwise),9B,9Ba,W;S;U;PRochester,7,7,WClarinus via Rochester,7,7A,W;SSandown,3,3,WTugwell,4,4,W;S;U;PTugwell (0700 - 0900),4,4m,W

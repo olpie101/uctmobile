@@ -11,6 +11,8 @@ import com.googlecode.objectify.annotation.Index;
 public class RouteTime {
     @Id @Index
     private Long Id;
+    @Index
+    private Long internalId;
     private String bracket;
     private String routeCode;
     private String operatingDayType;
@@ -19,13 +21,18 @@ public class RouteTime {
 
     public RouteTime(){};
 
-    public RouteTime(String bracket, String routecode, String operatingDayType, String routeStop, String routeTimes) {
+    public RouteTime(String id, String bracket, String routeCode, String operatingDayType, String routeStop, String routeTimes) {
+        this.internalId = Long.parseLong(id);
         this.bracket = bracket;
-        this.routeCode = routecode;
+        this.routeCode = routeCode;
         this.operatingDayType = operatingDayType;
         this.routeStop = routeStop;
         this.routeTimes = routeTimes;
     }
+
+    public Long getInternalId() { return internalId; }
+
+    public void setInternalId(Long internalId) { this.internalId = internalId; }
 
     public String getBracket() { return bracket; }
 

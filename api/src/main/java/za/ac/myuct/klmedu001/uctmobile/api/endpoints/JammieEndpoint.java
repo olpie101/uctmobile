@@ -121,19 +121,19 @@ public class JammieEndpoint {
         GregorianCalendar end = new GregorianCalendar(2014, 8, 31);
         start.setTimeZone(SAST);
         end.setTimeZone(SAST);
-        brackets.add(new JammieTimeTableBracket("pilot", start, end));
+        brackets.add(new JammieTimeTableBracket("Pilot", start, end));
 
         start = new GregorianCalendar(2014, 9, 1);
         end = new GregorianCalendar(2014, 10, 12);
         start.setTimeZone(SAST);
         end.setTimeZone(SAST);
-        brackets.add(new JammieTimeTableBracket("term", start, end));
+        brackets.add(new JammieTimeTableBracket("Term", start, end));
 
         start = new GregorianCalendar(2014, 10, 13);
         end = new GregorianCalendar(2015, 1, 15);
         start.setTimeZone(SAST);
         end.setTimeZone(SAST);
-        brackets.add(new JammieTimeTableBracket("vac", start, end));
+        brackets.add(new JammieTimeTableBracket("Vac", start, end));
 
         ofy().save().entities(brackets).now();
         ofy().save().entity(new LastJammieTimeTableBracketUpdate(new GregorianCalendar()));
@@ -176,7 +176,7 @@ public class JammieEndpoint {
                 String line;
                 while((line = br.readLine()) != null){
                     String [] entry = line.split(",");
-                    routeTimes.add(new RouteTime(entry[0], entry[1], entry[2], entry[3], entry[4].replaceAll(";", ",")));
+                    routeTimes.add(new RouteTime(entry[0], entry[1], entry[2], entry[3], entry[4], entry[5].replaceAll(";", ",")));
                 }
                 ofy().save().entities(routeTimes).now();
             }catch(IOException e){
@@ -187,9 +187,7 @@ public class JammieEndpoint {
     }
 
     @ApiMethod(name = "getRouteTime")
-    public List<RouteTime> getRouteTimes(){
-        return ofy().load().type(RouteTime.class).list();
-    }
+    public List<RouteTime> getRouteTimes(){return ofy().load().type(RouteTime.class).order("internalId").list();}
 
     @ApiMethod(name = "setUpEnvironment")
     public LastJammieTimeTableBracketUpdate setUpEnvironment () throws ConflictException {

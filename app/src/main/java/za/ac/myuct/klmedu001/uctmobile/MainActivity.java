@@ -1,6 +1,5 @@
 package za.ac.myuct.klmedu001.uctmobile;
 
-import android.animation.ValueAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -14,14 +13,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.squareup.okhttp.OkHttpClient;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import retrofit.RestAdapter;
-import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.JammieEndpoint;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.LastJammieTimeTableBracketUpdateTransformed;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
@@ -148,7 +142,7 @@ public class MainActivity extends Activity
             Log.d(TAG, "lastUpdate="+ lastUpdate);
 
             Log.d(TAG, "Querying Server");
-            JammieEndpoint jammieEndpointService = UCTConstants.jammieEndpointBuilderDeployed.build();
+            JammieEndpoint jammieEndpointService = UCTConstants.jammieEndpointBuilder.build();
 
             LastJammieTimeTableBracketUpdateTransformed serverLastUpdate;
 
