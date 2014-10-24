@@ -3,7 +3,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/jammie_container"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:weightSum="3">
+    android:layout_height="match_parent" android:weightSum="9"
+    android:paddingTop="?attr/actionBarSize">
+
+
+    <TextView
+        android:id="@+id/tv_jammie_breadcrumb"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:textAppearance="@style/jammieListBreadcrumbStyle"
+        style="@style/primaryBackgroundStandardPaddingLR"/>
 
     <ImageView
         android:id="@+id/iv_jammie_map"
@@ -13,24 +23,60 @@
         android:contentDescription="@string/jammie_map_description"
         android:src="@drawable/ic_launcher"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_jammie_all_routes"
+    <LinearLayout
+        android:id="@+id/ll_jammie_all_routes_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        tools:context=".MainActivity"/>
+        android:layout_weight="9"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/jammieListHeaderStyle"
+            style="@style/primaryBackgroundStandardPaddingLR"
+            android:text="@string/jammie_select_route"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_jammie_all_routes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MainActivity"/>
+    </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_jammie_routes"
+    <LinearLayout
+        android:id="@+id/ll_jammie_routes_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0"
-        tools:context=".MainActivity"/>
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/jammieListHeaderStyle"
+            style="@style/primaryBackgroundStandardPaddingLR"
+            android:text="@string/jammie_select_subroute"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_jammie_routes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MainActivity"/>
+    </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_jammie_days"
+    <LinearLayout
+        android:id="@+id/ll_jammie_days_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0"
-        tools:context=".MainActivity"/>
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/jammieListHeaderStyle"
+            style="@style/primaryBackgroundStandardPaddingLR"
+            android:text="@string/jammie_select_day"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_jammie_days"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MainActivity"/>
+    </LinearLayout>
 </LinearLayout>

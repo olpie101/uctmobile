@@ -3,34 +3,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <ScrollView
+    android:orientation="vertical"
+    android:gravity="top"
+    android:layout_gravity="top"
+    android:layout_marginTop="?attr/actionBarSize">
+    <HorizontalScrollView
         android:layout_gravity="top"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:scrollbars="horizontal|vertical"
-        android:scrollbarStyle="insideOverlay"
         android:fillViewport="true">
 
-        <HorizontalScrollView
-            android:layout_gravity="top"
-            android:layout_height="wrap_content"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:scrollbars="horizontal|vertical"
-            android:fillViewport="true">
+            android:layout_height="match_parent">
 
             <TableLayout
                 android:layout_gravity="top"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/tl_jammie_timetable"
+                android:gravity="top"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/jammie_timetable_header_height"
+                android:id="@+id/tl_jammie_timetable_header"
                 style="@style/jammieListItemStyle"
-                android:padding="0dp"
+                android:padding="@dimen/zero"
+                android:layout_margin="@dimen/zero"
                 android:stretchColumns="*"
-                tools:context="za.ac.myuct.klmedu001.uctmobile.fragment.JammieTimetableFragment">
+                tools:context="za.ac.myuct.klmedu001.uctmobile.fragment.JammieTimetableFragment" />
 
-            </TableLayout>
-        </HorizontalScrollView>
-    </ScrollView>
+            <ScrollView
+                android:layout_gravity="top"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_below="@id/tl_jammie_timetable_header"
+                android:scrollbars="horizontal|vertical"
+                android:scrollbarStyle="insideOverlay"
+                android:fillViewport="true"
+                android:layout_margin="@dimen/zero">
+
+                <TableLayout
+                    android:layout_gravity="top"
+                    android:gravity="top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tl_jammie_timetable"
+                    style="@style/jammieListItemStyle"
+                    android:padding="0dp"
+                    android:stretchColumns="*"
+                    tools:context="za.ac.myuct.klmedu001.uctmobile.fragment.JammieTimetableFragment" >
+
+                </TableLayout>
+
+            </ScrollView>
+        </RelativeLayout>
+    </HorizontalScrollView>
 </LinearLayout>
 

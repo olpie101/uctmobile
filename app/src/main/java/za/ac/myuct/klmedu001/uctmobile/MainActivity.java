@@ -1,36 +1,45 @@
 package za.ac.myuct.klmedu001.uctmobile;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.LoaderManager;
-import android.content.Loader;
+
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.JammieEndpoint;
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.LastJammieTimeTableBracketUpdateTransformed;
+import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
+import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.BackPressedEvent;
 import za.ac.myuct.klmedu001.uctmobile.fragment.JammieFragment;
 import za.ac.myuct.klmedu001.uctmobile.fragment.NavigationDrawerFragment;
 import za.ac.myuct.klmedu001.uctmobile.fragment.NewsFragment;
 import za.ac.myuct.klmedu001.uctmobile.processes.loaders.JammieTimeTableLoader;
 
 
-public class MainActivity extends Activity
+public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private final String TAG = "MainActivity";
     public static final int JAMMIE_LOADER_ID = UCTConstants.JAMMIE_LOADER_ID;
     private final long timeout = 20;                //request timeout limit
     private final TimeUnit unit = TimeUnit.SECONDS; //time unit for requests
+    @InjectView(R.id.main_toolbar)
+    Toolbar actionBar;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -48,8 +57,11 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
         Log.d("MAIN", "starting");
 
+        ButterKnife.inject(this);
+        setSupportActionBar(actionBar);
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
         // Set up the drawer.
@@ -67,7 +79,7 @@ public class MainActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         switch(position) {
             case 0:
                 fragmentManager.beginTransaction()
@@ -86,6 +98,7 @@ public class MainActivity extends Activity
         switch (number) {
             case 0:
                 mTitle = getString(R.string.title_news);
+                setTitle(mTitle);
                 break;
             case 1:
                 mTitle = getString(R.string.title_jammie_shuttle);
@@ -94,13 +107,12 @@ public class MainActivity extends Activity
                 mTitle = getString(R.string.title_section3);
                 break;
         }
+        setTitle(mTitle);
     }
 
     public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        setSupportActionBar(actionBar);
+        setTitle(mTitle);
     }
 
 
@@ -111,7 +123,7 @@ public class MainActivity extends Activity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
+            //restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -128,6 +140,17 @@ public class MainActivity extends Activity
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        BackPressedEvent back = new BackPressedEvent();
+        BaseApplication.getEventBus().post(back);
+
+        if(!back.intercepted)
+            super.onBackPressed();
+    }
+
+
 
     /**
      * Check if the Jammie timetable has been updated since last sync
@@ -150,7 +173,7 @@ public class MainActivity extends Activity
                 serverLastUpdate = jammieEndpointService.getLastUpdate().execute();
                 if(lastUpdate < serverLastUpdate.getDate()){
                     Log.d(TAG, "Jammie timetable needs updating\n");
-                    getLoaderManager().initLoader(JAMMIE_LOADER_ID, null, this);
+                    getSupportLoaderManager().initLoader(JAMMIE_LOADER_ID, null, this);
                 }else{
                     Log.d(TAG, "Jammie timetable !needs updating\n");
                 }

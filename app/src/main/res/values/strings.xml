@@ -12,6 +12,9 @@
     <string name="title_activity_news_article">News</string>
     <string name="hello_world">Hello world!</string>
     <string name="jammie_map_description">Map of current Jammie route selected</string>
+    <string name="jammie_select_route">Select route:</string>
+    <string name="jammie_select_subroute">Select sub-route:</string>
+    <string name="jammie_select_day">Select day:</string>
 
     <array name="nav_drawer_items">
         <item>News</item>

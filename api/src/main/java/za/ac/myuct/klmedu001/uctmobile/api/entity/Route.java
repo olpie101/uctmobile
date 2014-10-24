@@ -17,16 +17,18 @@ public class Route {
     String displayCode;     //actual code to display (code seen on jammie timetables publically)
     String code;            //internal code (code used to differentiate between the different types and day times)
     String operatingDays;   //days set for operation
+    String availability;    // Periods it is available (term, vac, etc)
 
     public Route(){
 
     }
 
-    public Route(String name, String displayCode, String code, String operatingDays) {
+    public Route(String availability, String name, String displayCode, String code, String operatingDays) {
         this.name = name;
         this.displayCode = displayCode;
         this.code = code;
         this.operatingDays = operatingDays;
+        this.availability = availability.replaceAll(" ", "");
     }
 
     public Long getId() {
@@ -64,4 +66,8 @@ public class Route {
     public void setOperatingDays(String operatingDays) {
         this.operatingDays = operatingDays;
     }
+
+    public String getAvailability() { return availability; }
+
+    public void setAvailability(String availability) { this.availability = availability; }
 }

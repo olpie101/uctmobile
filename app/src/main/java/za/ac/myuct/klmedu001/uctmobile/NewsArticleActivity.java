@@ -3,6 +3,8 @@ package za.ac.myuct.klmedu001.uctmobile;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,12 +19,16 @@ import butterknife.InjectView;
 import za.ac.myuct.klmedu001.uctmobile.constants.RSSItem;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 
-public class NewsArticleActivity extends Activity {
-
+public class NewsArticleActivity extends ActionBarActivity {
+    @InjectView(R.id.main_toolbar)
+    Toolbar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_article);
+        ButterKnife.inject(this);
+        actionBar.setTitle("TESTING !@#");
+        setSupportActionBar(actionBar);
         if (savedInstanceState == null) {
             Toast.makeText(this, "Article Null", Toast.LENGTH_SHORT).show();
             getFragmentManager().beginTransaction()
@@ -34,6 +40,8 @@ public class NewsArticleActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
 
@@ -50,10 +58,22 @@ public class NewsArticleActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id) {
+            case R.id.action_settings:
+                return true;
+            case android.R.id.home:
+                super.onOptionsItemSelected(item);
+                this.finish();
+                this.overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
     }
 
     /**

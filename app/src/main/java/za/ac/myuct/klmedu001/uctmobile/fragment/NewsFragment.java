@@ -1,12 +1,10 @@
 package za.ac.myuct.klmedu001.uctmobile.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
-import android.content.Loader;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,7 +67,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     SwipeRefreshLayout newsContainer;
     HashMap<String, RSSItem> rssFeed = new HashMap<String, RSSItem>();
     List<NewsItem> newsFeed = new ArrayList<NewsItem>();
-    LoaderManager lm;       //Used for background loading
+    android.support.v4.app.LoaderManager lm;       //Used for background loading
     private boolean newsLoading;    //track if loading for news is finished
     private boolean rssLoading;     //track if loading for rss feed is finished
 
@@ -156,14 +154,19 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     //Callbacks for news loader
-    private LoaderCallbacks<ArrayList<NewsItem>> newsItemLoaderCallbacks = new LoaderCallbacks<ArrayList<NewsItem>>() {
+    private LoaderManager.LoaderCallbacks<ArrayList<NewsItem>> newsItemLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<NewsItem>>() {
         @Override
-        public Loader<ArrayList<NewsItem>> onCreateLoader(int i, Bundle bundle) {
+        public android.support.v4.content.Loader<ArrayList<NewsItem>> onCreateLoader(int i, Bundle bundle) {
             return new NewsFrontPageLoader(getActivity().getApplication().getBaseContext());
         }
 
         @Override
-        public void onLoadFinished(Loader<ArrayList<NewsItem>> arrayListLoader, ArrayList<NewsItem> newsItems) {
+        public void onLoaderReset(android.support.v4.content.Loader<ArrayList<NewsItem>> arrayListLoader) {
+
+        }
+
+        @Override
+        public void onLoadFinished(android.support.v4.content.Loader<ArrayList<NewsItem>> arrayListLoader, ArrayList<NewsItem> newsItems) {
             Log.d(TAG, "finished loading");
             //Done loading news feed entries
             //Add any new entries into the database
@@ -203,22 +206,17 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             newsLoading = false;
             updateSwipeToRefresh();
         }
-
-        @Override
-        public void onLoaderReset(Loader<ArrayList<NewsItem>> arrayListLoader) {
-
-        }
     };
 
     //Callbacks for rss loader
-    private LoaderCallbacks<HashMap<String, RSSItem>> rssItemLoaderCallbacks = new LoaderCallbacks<HashMap<String, RSSItem>>() {
+    private LoaderManager.LoaderCallbacks<HashMap<String, RSSItem>> rssItemLoaderCallbacks = new LoaderManager.LoaderCallbacks<HashMap<String, RSSItem>>() {
         @Override
-        public Loader<HashMap<String, RSSItem>> onCreateLoader(int i, Bundle bundle) {
+        public android.support.v4.content.Loader<HashMap<String, RSSItem>> onCreateLoader(int i, Bundle bundle) {
             return new NewsRSSLoader(getActivity().getApplication().getBaseContext());
         }
 
         @Override
-        public void onLoadFinished(Loader<HashMap<String, RSSItem>> hashMapLoader, HashMap<String, RSSItem> rssItems) {
+        public void onLoadFinished(android.support.v4.content.Loader<HashMap<String, RSSItem>> hashMapLoader, HashMap<String, RSSItem> rssItems) {
             Log.d(TAG, "Loaded RSS Feed");
             //Done loading news feed entries
             //Add any new entries into the database
@@ -244,7 +242,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         @Override
-        public void onLoaderReset(Loader<HashMap<String, RSSItem>> arrayListLoader) {
+        public void onLoaderReset(android.support.v4.content.Loader<HashMap<String, RSSItem>> arrayListLoader) {
 
         }
     };
@@ -272,8 +270,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         // and will report this new data back to the 'mCallbacks' object.
 
         boolean startedLoading = false;
+        Bundle bundle = new Bundle();
         if(lm.getLoader(NEWS_LOADER_ID) == null) {
-            lm.initLoader(NEWS_LOADER_ID, null, newsItemLoaderCallbacks);
+            lm.initLoader(NEWS_LOADER_ID, bundle, newsItemLoaderCallbacks);
             startedLoading = true;
             newsLoading = true;
 //            Toast.makeText(getActivity(), "ref news", Toast.LENGTH_SHORT).show();

@@ -35,6 +35,7 @@ public class JammieAllRoutesAdapter extends RecyclerView.Adapter<JammieAllRoutes
     @Override
     public void onBindViewHolder(JammieAllRoutesAdapter.ViewHolder viewHolder, int i) {
         viewHolder.routeName.setText(items.get(i).getRoute());
+        viewHolder.routeNameText = items.get(i).getRoute();
         viewHolder.displayCode = items.get(i).getDisplayCode();
         viewHolder.position = i;
     }
@@ -47,6 +48,7 @@ public class JammieAllRoutesAdapter extends RecyclerView.Adapter<JammieAllRoutes
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @InjectView(android.R.id.text1)
         TextView routeName;
+        String routeNameText;
         String displayCode;
         int position;
         public ViewHolder(View itemView) {
@@ -57,8 +59,8 @@ public class JammieAllRoutesAdapter extends RecyclerView.Adapter<JammieAllRoutes
 
         @Override
         public void onClick(View view) {
-//            Toast.makeText(view.getContext(), "Item clicked #"+position, Toast.LENGTH_SHORT).show();
-            BaseApplication.getEventBus().post(new JammieAllRoutesClickedEvent(displayCode, position));
+            Toast.makeText(view.getContext(), "Item clicked #"+position+","+routeNameText+","+displayCode, Toast.LENGTH_SHORT).show();
+            BaseApplication.getEventBus().post(new JammieAllRoutesClickedEvent(routeNameText, displayCode, position));
         }
     }
 }

@@ -14,6 +14,7 @@ import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.Route;
  */
 @Table(name = "route")
 public class RouteContainer extends Model implements Parcelable {
+    @Column (name = "bracket") private String availability;    // Periods it is available (term, vac, etc)
     @Column private String name;            //Route name
     @Column private String displayCode;     //actual code to display (code seen on jammie timetables publically)
     @Column private String code;            //internal code (code used to differentiate between the different types and day times)
@@ -28,6 +29,7 @@ public class RouteContainer extends Model implements Parcelable {
         this.displayCode = in.getDisplayCode();
         this.code = in.getCode();
         this.operatingDays = in.getOperatingDays();
+        this.availability = in.getAvailability();
     }
 
     public String getName() {
@@ -62,9 +64,13 @@ public class RouteContainer extends Model implements Parcelable {
         this.operatingDays = operatingDays;
     }
 
+    public String getAvailability() { return availability; }
+
+    public void setAvailability(String availability) { this.availability = availability; }
+
     @Override
     public int describeContents() {
-        return 0;
+        return 5;
     }
 
     @Override

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set>
+    <!--This is used to animate the jammie timetable headers-->
+    <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+        android:propertyName="backgroundColor"
+        android:duration="3000"
+        android:startOffset="300"
+        android:repeatCount="0"
+        android:repeatMode="reverse"
+        android:valueType="intType"
+        android:valueFrom="@color/primary_transparent"
+        android:valueTo="@color/primary" />
+</set>

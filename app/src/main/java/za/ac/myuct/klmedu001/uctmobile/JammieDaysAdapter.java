@@ -11,6 +11,8 @@ import butterknife.InjectView;
 import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
 import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.JammieDaysClickedEvent;
 
+import static za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants.convertDay;
+
 /**
  * Created by eduardokolomajr on 2014/09/23.
  */
@@ -53,19 +55,5 @@ public class JammieDaysAdapter extends RecyclerView.Adapter<JammieDaysAdapter.Vi
         public void onClick(View view) {
             BaseApplication.getEventBus().post(new JammieDaysClickedEvent(dayChar));
         }
-    }
-
-    private String convertDay (char day){
-        switch(day){
-            case 'W':
-                return "Weekdays";
-            case 'S':
-                return "Saturday";
-            case 'U':
-                return "Sunday";
-            case 'P':
-                return "Public Holidays";
-        }
-        return "";
     }
 }

@@ -14,6 +14,7 @@ import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRou
  */
 @Table(name = "allRoutes")
 public class AllRoutesContainer extends Model implements Parcelable {
+    @Column (name = "bracket") private String availability;    // Periods it is available (term, vac, etc)
     @Column private String route;
     @Column private String displayCode;
 
@@ -24,6 +25,7 @@ public class AllRoutesContainer extends Model implements Parcelable {
         super();
         this.route = in.getRoute();
         this.displayCode = in.getDisplayCode();
+        this.availability = in.getAvailability();
     }
 
     public String getRoute() {
@@ -41,6 +43,10 @@ public class AllRoutesContainer extends Model implements Parcelable {
     public void setDisplayCode(String displayCode) {
         this.displayCode = displayCode;
     }
+
+    public String getAvailability() { return availability; }
+
+    public void setAvailability(String availability) { this.availability = availability; }
 
     @Override
     public int describeContents() {

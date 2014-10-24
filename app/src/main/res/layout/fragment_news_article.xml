@@ -2,11 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize"
     tools:context="za.ac.myuct.klmedu001.uctmobile.NewsArticleActivity$PlaceholderFragment">
 
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/wv_news_article"></WebView>
+        android:id="@+id/wv_news_article"/>
 
 </RelativeLayout>

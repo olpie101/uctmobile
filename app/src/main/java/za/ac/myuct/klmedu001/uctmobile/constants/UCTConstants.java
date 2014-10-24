@@ -18,14 +18,14 @@ import za.ac.myuct.klmedu001.uctmobile.processes.rest.adapter.CalendarAdapter;
 /**
  * Created by eduardokolomajr on 2014/07/26.
  */
-public interface UCTConstants {
+public class UCTConstants {
     public static final String UCT_URL = "http://www.uct.ac.za";
     public static final String UCT_DAILY_NEWS_URL = UCT_URL+"/dailynews/rss/";
     public static final String UCT_MONDAY_PAPER_URL = UCT_URL+"/mondaypaper/rss/";
 //    public static final String UCT_URL = "http://localhost/~eduardokolomajr/www.uct.ac.za";
 //    public static final String UCT_URL = "http://192.168.56.1/~eduardokolomajr/www.uct.ac.za/";
-//    public static final String API_URL = "http://10.0.3.2:8080/_ah/api/";
-    public static final String API_URL = "http://august-bond-708.appspot.com/_ah/api/";
+    public static final String API_URL = "http://10.0.3.2:8080/_ah/api/";
+//    public static final String API_URL = "http://august-bond-708.appspot.com/_ah/api/";
     public static final String HOMEPAGE_FEATURED_STORIES_CONTAINER = "#slider";
     public static final String HOMEPAGE_FEATURED_STORIES_ITEM = "li";
     public static final String HOMEPAGE_STORIES_CONTAINER = "#hp_main_holder";
@@ -58,11 +58,11 @@ public interface UCTConstants {
 
     public static final String html_header_body_open = "<html><head><style type='text/css'>html,body{" +
             "margin: 0 auto;padding: 0px;font-family: Sans-Serif;}" +
-            "h1:first-of-type{padding:5%; color:white}" +
+            "h1:first-of-type{padding:2%; color:white}" +
             "p{padding:0% 5%;}" +
             "a:hover, a:visited:hover {font-weight: bold;color: #006699;text-decoration: underline;}" +
             "a:visited {font-weight: bold;color: #1284C6;text-decoration: none;}" +
-            ".top-section{background-color:#0099FF; min-height:100px;}" +
+            ".top-section{background-color:#0099FF; min-height:70px;}" +
             ".date {font-weight: bold; font-size:10pt; color:#666666; text-align:justify;}"+
             ".rightmargin{width:100%;height:auto;margin:0px;padding:0px;clear:both;}" +
             ".small{font-weight:normal;color:#666666;font-size:11pt;}" +
@@ -74,11 +74,27 @@ public interface UCTConstants {
         .registerTypeAdapter(Calendar.class, new CalendarAdapter())
         .create();
 
-//    public static final JammieEndpoint.Builder jammieEndpointBuilder = new JammieEndpoint.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-//            .setRootUrl(UCTConstants.API_URL)
+    public static final JammieEndpoint.Builder jammieEndpointBuilder = new JammieEndpoint.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+            .setRootUrl(UCTConstants.API_URL)
+            .setApplicationName("august-bond-708");
+
+//    public static final JammieEndpoint.Builder jammieEndpointBuilder =
+//            new JammieEndpoint.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
 //            .setApplicationName("august-bond-708");
 
-    public static final JammieEndpoint.Builder jammieEndpointBuilder =
-            new JammieEndpoint.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-            .setApplicationName("august-bond-708");
+    public enum Type {MAP, ALLROUTES, ROUTES, DAYS}
+
+    public static String convertDay (char day){
+        switch(day){
+            case 'W':
+                return "Weekdays";
+            case 'S':
+                return "Saturday";
+            case 'U':
+                return "Sunday";
+            case 'P':
+                return "Public Holidays";
+        }
+        return "";
+    }
 }

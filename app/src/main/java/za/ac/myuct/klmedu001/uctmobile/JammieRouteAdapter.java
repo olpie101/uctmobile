@@ -50,10 +50,10 @@ public class JammieRouteAdapter extends RecyclerView.Adapter<JammieRouteAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @InjectView(android.R.id.text1)
-        TextView route;
+        public TextView route;
         String displayCode;
         String code;
-        int position;
+        public int position;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -64,7 +64,7 @@ public class JammieRouteAdapter extends RecyclerView.Adapter<JammieRouteAdapter.
         @Override
         public void onClick(View view) {
             Toast.makeText(view.getContext(), "SubRouteClicked", Toast.LENGTH_SHORT).show();
-            BaseApplication.getEventBus().post(new JammieRouteClickedEvent(displayCode, code, position));
+            BaseApplication.getEventBus().post(new JammieRouteClickedEvent(route.getText().toString(), displayCode, code, position));
         }
     }
 }

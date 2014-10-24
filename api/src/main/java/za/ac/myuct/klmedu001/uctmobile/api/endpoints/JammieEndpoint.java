@@ -68,15 +68,14 @@ public class JammieEndpoint {
         if(ofy().load().type(AllRoutes.class).list().size() > 0)
             throw new ConflictException("The routes list has been created already");
 
-
         List<AllRoutes> routes = new ArrayList<AllRoutes>();
         routes.add(new AllRoutes("Bremner", "4B"));
         routes.add(new AllRoutes("Claremont", "1"));
         routes.add(new AllRoutes("Clarinus", "6"));
         routes.add(new AllRoutes("Forest Hill", "5"));
-        routes.add(new AllRoutes("Groote Schuur", "3A"));
+        routes.add(new AllRoutes("Pilot", "Groote Schuur", "3A"));
         routes.add(new AllRoutes("Hiddingh Hall", "10"));
-        routes.add(new AllRoutes("Liesbeek", "9"));
+        routes.add(new AllRoutes("Liesbeeck", "9"));
         routes.add(new AllRoutes("Medical School (anti-clockwise)", "9C"));
         routes.add(new AllRoutes("Mowbray", "8"));
         routes.add(new AllRoutes("Obz Square", "9C"));
@@ -150,7 +149,7 @@ public class JammieEndpoint {
                 String line;
                 while((line = br.readLine()) != null){
                     String [] entry = line.split(",");
-                    routes.add(new Route(entry[0], entry[1], entry[2], entry[3].replaceAll(";", ",")));
+                    routes.add(new Route(entry[0].replaceAll(";", ","), entry[1], entry[2], entry[3], entry[4].replaceAll(";", ",")));
                 }
                 ofy().save().entities(routes).now();
             }catch(IOException e){

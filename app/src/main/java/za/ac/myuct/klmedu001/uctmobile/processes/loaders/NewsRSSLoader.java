@@ -1,7 +1,7 @@
 package za.ac.myuct.klmedu001.uctmobile.processes.loaders;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 import android.util.Xml;
 
@@ -77,13 +77,19 @@ public class NewsRSSLoader extends AsyncTaskLoader<HashMap<String, RSSItem>> {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }catch (NullPointerException e){
+            //TODO fix this problem. Happens when not connected network
+            e.printStackTrace();
         }
 
+        try {
 //        Collections.sort(dataList);
-        for(RSSItem item : dataList){
-//            Log.d(TAG, "ITEM: "+item.toString());
-            data.put(item.title, item);
-        }
+            for(RSSItem item : dataList){
+//                Log.d(TAG, "ITEM: "+item.toString());
+                //TODO fix this problem. Happens when not connected network
+                data.put(item.title, item);
+            }
+        }catch(NullPointerException e){ e.printStackTrace(); }
         return data;
     }
 

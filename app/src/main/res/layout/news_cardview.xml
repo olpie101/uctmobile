@@ -9,6 +9,7 @@
     card_view:cardCornerRadius="@dimen/cardview_corner_radius"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
+    android:padding="@dimen/zero"
     >
 
 <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
@@ -27,7 +28,10 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:layout_gravity="top"
-        android:tint="@color/tint_news_image"/>
+        android:tint="@color/tint_news_image"
+        android:padding = "@dimen/zero"
+        android:layout_margin = "@dimen/zero"
+        />
 
     <TextView
         android:id="@+id/card_view_title"
