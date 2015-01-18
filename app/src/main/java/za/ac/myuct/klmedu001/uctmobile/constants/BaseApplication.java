@@ -1,9 +1,8 @@
 package za.ac.myuct.klmedu001.uctmobile.constants;
 
 import android.app.Application;
-import android.content.Context;
 
-import com.activeandroid.ActiveAndroid;
+import com.grosner.dbflow.config.FlowManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
@@ -26,12 +25,12 @@ public class BaseApplication extends Application {
         super.onCreate();
 
         mEventBus = new Bus(ThreadEnforcer.ANY);
-        ActiveAndroid.initialize(this);
+        FlowManager.init(this);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        ActiveAndroid.dispose();
+        FlowManager.destroy();
     }
 }

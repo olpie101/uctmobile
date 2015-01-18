@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
+import com.grosner.dbflow.runtime.TransactionManager;
+import com.grosner.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.grosner.dbflow.sql.language.Select;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -32,12 +32,12 @@ import za.ac.myuct.klmedu001.uctmobile.NewsArticleActivity;
 import za.ac.myuct.klmedu001.uctmobile.NewsCardsAdapter;
 import za.ac.myuct.klmedu001.uctmobile.R;
 import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
-import za.ac.myuct.klmedu001.uctmobile.processes.loaders.NewsFrontPageLoader;
-import za.ac.myuct.klmedu001.uctmobile.constants.NewsItem;
-import za.ac.myuct.klmedu001.uctmobile.processes.loaders.NewsRSSLoader;
-import za.ac.myuct.klmedu001.uctmobile.constants.RSSItem;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.NewsItem;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.RSSItem;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.NewsCardClickedEvent;
+import za.ac.myuct.klmedu001.uctmobile.processes.loaders.NewsFrontPageLoader;
+import za.ac.myuct.klmedu001.uctmobile.processes.loaders.NewsRSSLoader;
 
 /**
  * Created by eduardokolomajr on 2014/07/25.
@@ -109,9 +109,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         if(savedInstanceState == null){
             //Load entries from database for both the news feed and rss feed
-            newsFeed = new Select().all().from(NewsItem.class).execute();
+            newsFeed = new Select().from(NewsItem.class).queryList();
             Collections.reverse(newsFeed);  //list is in reverse in the database for storage purposes
-            List<RSSItem> rssFeedList = new Select().all().from(RSSItem.class).execute();
+            List<RSSItem> rssFeedList = new Select().all().from(RSSItem.class).queryList();
 
             for(RSSItem item : rssFeedList){
                 rssFeed.put(item.title, item);
@@ -125,6 +125,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onAttach(Activity activity) {
+        //TODO check if getArguments() == null first
         super.onAttach(activity);
         if(getArguments().getInt(ARG_SECTION_NUMBER) > 0)
             ((MainActivity) activity).onSectionAttached(
@@ -305,42 +306,43 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //noinspection unchecked
         ArrayList<NewsItem> tempList = (ArrayList<NewsItem>) list.clone();
         Collections.reverse(tempList);  //reverse list so works fine with the database
-        ActiveAndroid.beginTransaction();
-        try {
-            for(NewsItem item : tempList){
-                item.save();
-            }
-            ActiveAndroid.setTransactionSuccessful();
-            Log.d(TAG+12, "saved to news table");
-            success = true;
-        }catch (Exception e){
-            Log.d(TAG+12, "error saving to news table");
-        }
-        finally {
-            ActiveAndroid.endTransaction();
-            Log.d(TAG+12, "end save to news table");
-        }
-        return success;
+        TransactionManager.getInstance().save(ProcessModelInfo.withModels(tempList));
+//        ActiveAndroid.beginTransaction();
+//        try {
+//            for(NewsItem item : tempList){
+//                item.save();
+//            }
+//            ActiveAndroid.setTransactionSuccessful();
+//            Log.d(TAG+12, "saved to news table");
+//            success = true;
+//        }catch (Exception e){
+//            Log.d(TAG+12, "error saving to news table");
+//        }
+//        finally {
+//            ActiveAndroid.endTransaction();
+//            Log.d(TAG+12, "end save to news table");
+//        }
+        return true;
     }
 
     private boolean saveToRssTable(HashMap<String, RSSItem> rssMap){
         boolean success = false;
-        Collection<RSSItem> rssList = rssMap.values();
-        ActiveAndroid.beginTransaction();
-        try {
-            for(RSSItem item : rssList){
-                item.save();
-            }
-            ActiveAndroid.setTransactionSuccessful();
-            Log.d(TAG+12, "saved to rss table");
-            success = true;
-        }catch (Exception e){
-            Log.d(TAG+12, "error saving to rss table");
-        }
-        finally {
-            ActiveAndroid.endTransaction();
-            Log.d(TAG+12, "end save to rss table");
-        }
-        return success;
+        TransactionManager.getInstance().save(ProcessModelInfo.withModels(rssMap.values()));
+//        ActiveAndroid.beginTransaction();
+//        try {
+//            for(RSSItem item : rssList){
+//                item.save();
+//            }
+//            ActiveAndroid.setTransactionSuccessful();
+//            Log.d(TAG+12, "saved to rss table");
+//            success = true;
+//        }catch (Exception e){
+//            Log.d(TAG+12, "error saving to rss table");
+//        }
+//        finally {
+//            ActiveAndroid.endTransaction();
+//            Log.d(TAG+12, "end save to rss table");
+//        }
+        return true;
     }
 }

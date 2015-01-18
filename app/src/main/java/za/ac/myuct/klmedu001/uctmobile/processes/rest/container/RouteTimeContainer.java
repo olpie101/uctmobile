@@ -3,23 +3,25 @@ package za.ac.myuct.klmedu001.uctmobile.processes.rest.container;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.grosner.dbflow.annotation.Column;
+import com.grosner.dbflow.annotation.Table;
+import com.grosner.dbflow.structure.BaseModel;
 
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.RouteTime;
+import za.ac.myuct.klmedu001.uctmobile.constants.AppDatabase;
 
 /**
  * Created by eduardokolomajr on 2014/09/19.
  */
-@Table(name = "routeTime")
-public class RouteTimeContainer extends Model implements Parcelable {
-    @Column (index = true) private Long internalId;
-    @Column private String bracket;
-    @Column private String routeCode;
-    @Column private String operatingDayType;
-    @Column private String routeStop;
-    @Column private String routeTimes;
+@Table(databaseName = AppDatabase.NAME, value = AppDatabase.TABLE_ROUTE_TIME)
+public class RouteTimeContainer extends BaseModel implements Parcelable {
+    @Column (columnType = Column.PRIMARY_KEY_AUTO_INCREMENT) long _id;
+    @Column(unique = true) Long internalId;
+    @Column String bracket;
+    @Column String routeCode;
+    @Column String operatingDayType;
+    @Column String routeStop;
+    @Column String routeTimes;
 
     @SuppressWarnings("unused")
     public RouteTimeContainer() {

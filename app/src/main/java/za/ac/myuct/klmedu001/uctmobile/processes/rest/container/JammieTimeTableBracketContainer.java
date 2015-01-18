@@ -3,29 +3,35 @@ package za.ac.myuct.klmedu001.uctmobile.processes.rest.container;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.grosner.dbflow.annotation.Column;
+import com.grosner.dbflow.annotation.Table;
+import com.grosner.dbflow.structure.BaseModel;
 
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.JammieTimeTableBracketTransformed;
+import za.ac.myuct.klmedu001.uctmobile.constants.AppDatabase;
 
 /**
  * Created by eduardokolomajr on 2014/09/19.
  */
-@Table(name = "jammieTimeTableBrackets")
-public class JammieTimeTableBracketContainer extends Model implements Parcelable {
-    @Column private String type;
-    @Column private long start;
-    @Column private long end;
+@Table(databaseName = AppDatabase.NAME, value = AppDatabase.TABLE_JAMMIE_TIMETABLE_BRACKET)
+public class JammieTimeTableBracketContainer extends BaseModel implements Parcelable {
+    @Column (columnType = Column.PRIMARY_KEY_AUTO_INCREMENT) long _id;
+    @Column String type;
+    @Column long start;
+    @Column long end;
 
     @SuppressWarnings("unused")
-    public JammieTimeTableBracketContainer(){super();}
+    public JammieTimeTableBracketContainer(){}
 
     public JammieTimeTableBracketContainer(JammieTimeTableBracketTransformed in){
         super();
         type = in.getType();
         start = in.getStart();
         end = in.getEnd();
+    }
+
+    public long get_id() {
+        return _id;
     }
 
     public String getType() {

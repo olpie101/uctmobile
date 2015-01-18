@@ -3,25 +3,27 @@ package za.ac.myuct.klmedu001.uctmobile.processes.rest.container;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.grosner.dbflow.annotation.Column;
+import com.grosner.dbflow.annotation.Table;
+import com.grosner.dbflow.structure.BaseModel;
 
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.Route;
+import za.ac.myuct.klmedu001.uctmobile.constants.AppDatabase;
 
 /**
  * Created by eduardokolomajr on 2014/09/19.
  */
-@Table(name = "route")
-public class RouteContainer extends Model implements Parcelable {
-    @Column (name = "bracket") private String availability;    // Periods it is available (term, vac, etc)
-    @Column private String name;            //Route name
-    @Column private String displayCode;     //actual code to display (code seen on jammie timetables publically)
-    @Column private String code;            //internal code (code used to differentiate between the different types and day times)
-    @Column private String operatingDays;   //days set for operation
+@Table(databaseName = AppDatabase.NAME, value = AppDatabase.TABLE_ROUTE)
+public class RouteContainer extends BaseModel implements Parcelable {
+    @Column (columnType = Column.PRIMARY_KEY_AUTO_INCREMENT) long _id;
+    @Column String availability;    // Periods it is available (term, vac, etc)
+    @Column String name;            //Route name
+    @Column String displayCode;     //actual code to display (code seen on jammie timetables publically)
+    @Column String code;            //internal code (code used to differentiate between the different types and day times)
+    @Column String operatingDays;   //days set for operation
 
     @SuppressWarnings("unused")
-    public RouteContainer(){super();}
+    public RouteContainer(){}
 
     public RouteContainer(Route in){
         super();

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import za.ac.myuct.klmedu001.uctmobile.constants.RSSItem;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.RSSItem;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 
 /**

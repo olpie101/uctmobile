@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Here we setting appcompat’s actionBarStyle -->
 
         <!-- colorPrimary is used for the default action bar background -->
@@ -18,6 +18,9 @@
              colorControlHighlight & colorSwitchThumbNormal. -->
 
         <item name="android:textColor">@color/white</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="primaryBackground">

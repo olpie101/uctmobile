@@ -1,7 +1,5 @@
 package za.ac.myuct.klmedu001.uctmobile.fragment;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -13,12 +11,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.activeandroid.query.Select;
+import com.grosner.dbflow.sql.builder.Condition;
+import com.grosner.dbflow.sql.language.Select;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import za.ac.myuct.klmedu001.uctmobile.R;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteTimeContainer;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteTimeContainer$Table;
 
 import static za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants.convertDay;
 
@@ -85,9 +84,11 @@ public class JammieTimetableFragment extends Fragment {
             day = getArguments().getChar(ARG_DAY);
         }
         routeTimes = new Select().from(RouteTimeContainer.class)
-                .where("bracket = ? AND operatingDayType = ? AND routeCode = ?", period, day, code)
-                .orderBy("internalId ASC")
-                .execute();
+                .where(Condition.column(RouteTimeContainer$Table.BRACKET).is(period))
+                .and(Condition.column(RouteTimeContainer$Table.OPERATINGDAYTYPE).is(day))
+                .and(Condition.column(RouteTimeContainer$Table.ROUTECODE).is(code))
+                .orderBy(true, RouteTimeContainer$Table.INTERNALID)
+                .queryList();
 //        Log.d(TAG, "oncreate");
     }
 

@@ -4,6 +4,8 @@
     <color name="primary_dark">#004C80</color>
     <color name="primary_light">#50B9FF</color>
     <color name="primary_transparent">#000099FF</color>
+    <color name="primary_half">#770099FF</color>
+    <color name="primary_dark_30">#4D004C80</color>
     <color name="accent">#FFC300</color>
     <color name="accent2">#FF8E00</color>
     <color name="accent3">#D9FF00</color>

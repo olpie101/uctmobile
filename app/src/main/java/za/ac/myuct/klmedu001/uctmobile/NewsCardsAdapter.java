@@ -6,16 +6,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
-import za.ac.myuct.klmedu001.uctmobile.constants.NewsItem;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.NewsItem;
 import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.NewsCardClickedEvent;
 import za.ac.myuct.klmedu001.uctmobile.processes.NewsStreamDrawable;
 
@@ -44,26 +44,28 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
     private static int imageMargin = 0;         //card margin in dips
     private static int mCornerRadius;       //card corner radius for transformations
     private static int mMargin;             //card margin for transformation
-    private static Picasso picasso;
+    private Picasso picasso;
 
 
     public NewsCardsAdapter(ArrayList<NewsItem> items, Context context){
         this.items = items;
         this.context = new WeakReference<Context>(context);
-        imageWidth = context.getResources().getDisplayMetrics().widthPixels-context.getResources().getDimensionPixelSize(R.dimen.cardview_padding);
+        imageWidth = context.getResources().getDisplayMetrics().widthPixels;
         imageHeight = context.getResources().getDimensionPixelSize(R.dimen.cardview_height);
         final float density = context.getResources().getDisplayMetrics().density;
-        imageCornerRadius = (int)(context.getResources().getDimension(R.dimen.cardview_corner_radius)/density);
+        imageCornerRadius = (int)context.getResources().getDimension(R.dimen.cardview_corner_radius);
         Log.d(TAG, "crd="+imageCornerRadius);
         Log.d(TAG, "density="+density);
-        mCornerRadius = (int) (imageCornerRadius * density + 0.5f);
-        mMargin = (int) (imageMargin * density + 0.5f);
+        mCornerRadius = imageCornerRadius;
+        mMargin = imageMargin;
 
-        picasso = new Picasso.Builder(this.context.get()).downloader(new OkHttpDownloader(new OkHttpClient())).loggingEnabled(true).build();
+
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_cardview, viewGroup, false);
+        ViewCompat.setElevation(v, 10);
+
         return new ViewHolder(v);
     }
 
@@ -79,7 +81,7 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
         return items.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnTouchListener{
         @InjectView(R.id.card_view_image)
         ImageView photo;
         @InjectView(R.id.card_view_title)
@@ -92,25 +94,27 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
         Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                if(Build.VERSION.SDK_INT < 21){
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH){
                         photo.setImageDrawable(new NewsStreamDrawable(bitmap, mCornerRadius, mMargin));
-                        if(saveBitmap) {
-                            try {
-                                File file = new File(context.get().getCacheDir(), fileName);
-                                // Use the compress method on the Bitmap object to write image to
-                                // the OutputStream
-                                FileOutputStream fos = new FileOutputStream(file);
-
-                                // Writing the bitmap to the output stream
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                                fos.close();
-                                Log.d(TAG + "Target", "image '" + file.getName() + "' saved");
-                            } catch (Exception e) {
-                                Log.e("saveToInternalStorage()", e.getMessage());
-                            }
-                        }
+                }else{
+                    photo.setImageBitmap(bitmap);
                 }
 
+                if(saveBitmap) {
+                    try {
+                        File file = new File(context.get().getCacheDir(), fileName);
+                        // Use the compress method on the Bitmap object to write image to
+                        // the OutputStream
+                        FileOutputStream fos = new FileOutputStream(file);
+
+                        // Writing the bitmap to the output stream
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                        fos.close();
+                        Log.d(TAG + "Target", "image '" + file.getName() + "' saved");
+                    } catch (Exception e) {
+                        Log.e("saveToInternalStorage()", e.getMessage());
+                    }
+                }
             }
 
             @Override
@@ -141,16 +145,15 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
             File file = new File(context.get().getCacheDir(), fileName);
             Log.d(TAG, "file path = "+file.getPath());
 
-
             if(file.exists()){
                 Log.d(TAG, "loading image '"+fileName+"' from file, "+photoLink);
 //                picasso.load(file).resize(imageWidth, imageHeight).into(new ImageTarget(photo, null));
                 saveBitmap = false;
-                picasso.load(file).resize(imageWidth, imageHeight).into(target);
+                Picasso.with(context.get()).load(file).resize(imageWidth, imageHeight).into(target);
             }else{
                 Log.d(TAG, "loading image '"+fileName+"' from network, "+photoLink);
                 saveBitmap = true;
-                picasso.load(photoLink).resize(imageWidth, imageHeight).into(target);
+                Picasso.with(context.get()).load(photoLink).resize(imageWidth, imageHeight).into(target);
             }
         }
 
@@ -161,6 +164,22 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.View
         @Override
         public void onClick(View view) {
             BaseApplication.getEventBus().post(new NewsCardClickedEvent(title.getText().toString()));
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int action = event.getActionMasked();
+
+            switch (action){
+                case MotionEvent.ACTION_DOWN:
+                    ViewCompat.setTranslationZ(v, 120);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    ViewCompat.setTranslationZ(v, 10);
+                    break;
+
+            }
+            return true;
         }
     }
 

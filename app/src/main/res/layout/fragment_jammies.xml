@@ -5,7 +5,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:weightSum="9"
     android:paddingTop="?attr/actionBarSize">
-
+    <ImageView
+        android:id="@+id/iv_jammie_map"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:layout_weight="0"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/jammie_map_description"
+        android:background="@color/primary_half"/>
 
     <TextView
         android:id="@+id/tv_jammie_breadcrumb"
@@ -14,14 +21,6 @@
         android:layout_weight="0"
         android:textAppearance="@style/jammieListBreadcrumbStyle"
         style="@style/primaryBackgroundStandardPaddingLR"/>
-
-    <ImageView
-        android:id="@+id/iv_jammie_map"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0"
-        android:contentDescription="@string/jammie_map_description"
-        android:src="@drawable/ic_launcher"/>
 
     <LinearLayout
         android:id="@+id/ll_jammie_all_routes_container"

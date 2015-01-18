@@ -3,29 +3,31 @@ package za.ac.myuct.klmedu001.uctmobile.processes.rest.container;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.grosner.dbflow.annotation.Column;
+import com.grosner.dbflow.annotation.Table;
+import com.grosner.dbflow.structure.BaseModel;
 
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRoutes;
+import za.ac.myuct.klmedu001.uctmobile.constants.AppDatabase;
 
 /**
  * Created by eduardokolomajr on 2014/09/19.
  */
-@Table(name = "allRoutes")
-public class AllRoutesContainer extends Model implements Parcelable {
-    @Column (name = "bracket") private String availability;    // Periods it is available (term, vac, etc)
-    @Column private String route;
-    @Column private String displayCode;
+@Table(databaseName = AppDatabase.NAME, value = AppDatabase.TABLE_ALL_ROUTES)
+public class AllRoutesContainer extends BaseModel implements Parcelable {
+    @Column (columnType = Column.PRIMARY_KEY_AUTO_INCREMENT) long _id;
+    @Column String bracket;    // Periods it is available (term, vac, etc)
+    @Column String route;
+    @Column String displayCode;
 
     @SuppressWarnings("unused")
-    public AllRoutesContainer(){super();}
+    public AllRoutesContainer(){}
 
     public AllRoutesContainer(AllRoutes in){
         super();
         this.route = in.getRoute();
         this.displayCode = in.getDisplayCode();
-        this.availability = in.getAvailability();
+        this.bracket = in.getAvailability();
     }
 
     public String getRoute() {
@@ -44,13 +46,13 @@ public class AllRoutesContainer extends Model implements Parcelable {
         this.displayCode = displayCode;
     }
 
-    public String getAvailability() { return availability; }
+    public String getBracket() { return bracket; }
 
-    public void setAvailability(String availability) { this.availability = availability; }
+    public void setBracket(String bracket) { this.bracket = bracket; }
 
     @Override
     public int describeContents() {
-        return 0;
+        return 3;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class JammieAllRoutesAdapter extends RecyclerView.Adapter<JammieAllRoutes
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(view.getContext(), "Item clicked #"+position+","+routeNameText+","+displayCode, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(view.getContext(), "Item clicked #"+position+","+routeNameText+","+displayCode, Toast.LENGTH_SHORT).show();
             BaseApplication.getEventBus().post(new JammieAllRoutesClickedEvent(routeNameText, displayCode, position));
         }
     }

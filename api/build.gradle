@@ -2,11 +2,18 @@
 // https://github.com/GoogleCloudPlatform/gradle-appengine-plugin
 
 buildscript {
+    ext {
+        appengineVersion = "1.9.17"
+        objectifyVersion = "5.0.3"
+        serveletVersion = "2.5"
+        gsonVersion = "2.3"
+    }
+
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.8'
+        classpath "com.google.appengine:gradle-appengine-plugin:$appengineVersion"
     }
 }
 
@@ -14,34 +21,36 @@ repositories {
     mavenCentral();
 }
 
-apply plugin: 'java'
-apply plugin: 'war'
-apply plugin: 'appengine'
+apply plugin: "java"
+apply plugin: "war"
+apply plugin: "appengine"
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.8'
-  compile 'com.google.appengine:appengine-endpoints:1.9.8'
-  compile 'com.google.appengine:appengine-endpoints-deps:1.9.8'
-  compile 'com.googlecode.objectify:objectify:5.0.3'
-  compile 'javax.servlet:servlet-api:2.5'
-  compile 'com.google.code.gson:gson:2.3'
+    compile fileTree(dir: "libs", include: ["*.jar"])
+    appengineSdk "com.google.appengine:appengine-java-sdk:$appengineVersion"
+    compile "com.google.appengine:appengine-endpoints:$appengineVersion"
+    compile "com.google.appengine:appengine-endpoints-deps:$appengineVersion"
+    compile "com.googlecode.objectify:objectify:$objectifyVersion"
+    compile "javax.servlet:servlet-api:$serveletVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
 }
 
 appengine {
-  downloadSdk = true
-  daemon = true
-  disableUpdateCheck = false
-  appcfg {
-    oauth2 = false
-    noCookies = false
-    email = "junykol22@gmail.com"
-  }
-  endpoints {
-//    getClientLibsOnBuild = true
-//    getDiscoveryDocsOnBuild = true
-  }
+    downloadSdk = true
+    daemon = true
+    disableUpdateCheck = false
+    httpAddress = "0.0.0.0"
+    httpPort = 8080
+    appcfg {
+        oauth2 = false
+        noCookies = false
+        email = "junykol22@gmail.com"
+    }
+    endpoints {
+        getClientLibsOnBuild = true
+        getDiscoveryDocsOnBuild = true
+    }
 }

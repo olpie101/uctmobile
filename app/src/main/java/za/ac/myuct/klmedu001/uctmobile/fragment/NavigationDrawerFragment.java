@@ -108,8 +108,8 @@ public class NavigationDrawerFragment extends Fragment {
         Log.d(TAG, "inside OCV set OICL");
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActivity(),
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
+                R.layout.navigation_item,
+                R.id.text1,
                 getResources().getStringArray(R.array.nav_drawer_items)));
 
         Log.d(TAG, "inside OCV set Adapter");
@@ -173,7 +173,8 @@ public class NavigationDrawerFragment extends Fragment {
                             .getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
-
+//                mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+                mDrawerListView.setSelection(mCurrentSelectedPosition);
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };

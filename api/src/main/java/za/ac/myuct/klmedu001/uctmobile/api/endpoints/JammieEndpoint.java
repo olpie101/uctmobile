@@ -1,36 +1,27 @@
 package za.ac.myuct.klmedu001.uctmobile.api.endpoints;
 
-import com.google.api.server.spi.SystemServiceServlet;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.ConflictException;
-import com.google.api.server.spi.response.NotFoundException;
 
-import java.applet.AppletContext;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Logger;
-
-import javax.inject.Named;
-import javax.servlet.ServletContext;
-
-import static za.ac.myuct.klmedu001.uctmobile.api.OfyService.ofy;
 
 import za.ac.myuct.klmedu001.uctmobile.api.entity.AllRoutes;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.JammieTimeTableBracket;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.LastJammieTimeTableBracketUpdate;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.Route;
 import za.ac.myuct.klmedu001.uctmobile.api.entity.RouteTime;
-import za.ac.myuct.klmedu001.uctmobile.api.entity.transformed.LastJammieTimeTableBracketUpdateTransformed;
+
+import static za.ac.myuct.klmedu001.uctmobile.api.OfyService.ofy;
 
 /**
  * Created by eduardokolomajr on 2014/09/16.
@@ -122,14 +113,14 @@ public class JammieEndpoint {
         end.setTimeZone(SAST);
         brackets.add(new JammieTimeTableBracket("Pilot", start, end));
 
-        start = new GregorianCalendar(2014, 9, 1);
-        end = new GregorianCalendar(2014, 10, 12);
+        start = new GregorianCalendar(2015, 0, 2);
+        end = new GregorianCalendar(2015, 10, 12);
         start.setTimeZone(SAST);
         end.setTimeZone(SAST);
         brackets.add(new JammieTimeTableBracket("Term", start, end));
 
         start = new GregorianCalendar(2014, 10, 13);
-        end = new GregorianCalendar(2015, 1, 15);
+        end = new GregorianCalendar(2015, 0, 1);
         start.setTimeZone(SAST);
         end.setTimeZone(SAST);
         brackets.add(new JammieTimeTableBracket("Vac", start, end));

@@ -6,4 +6,6 @@
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
     android:background="#cccc"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:paddingTop="?attr/actionBarSize"
     tools:context="za.ac.myuct.klmedu001.uctmobile.fragment.NavigationDrawerFragment" />

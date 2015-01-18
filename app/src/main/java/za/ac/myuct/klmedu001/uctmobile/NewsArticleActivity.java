@@ -1,6 +1,5 @@
 package za.ac.myuct.klmedu001.uctmobile;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -16,7 +15,7 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import za.ac.myuct.klmedu001.uctmobile.constants.RSSItem;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.RSSItem;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 
 public class NewsArticleActivity extends ActionBarActivity {
