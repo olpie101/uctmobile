@@ -15,9 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.grosner.dbflow.runtime.TransactionManager;
-import com.grosner.dbflow.runtime.transaction.process.ProcessModelInfo;
-import com.grosner.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.runtime.TransactionManager;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -32,12 +32,12 @@ import za.ac.myuct.klmedu001.uctmobile.NewsArticleActivity;
 import za.ac.myuct.klmedu001.uctmobile.NewsCardsAdapter;
 import za.ac.myuct.klmedu001.uctmobile.R;
 import za.ac.myuct.klmedu001.uctmobile.constants.BaseApplication;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.NewsItem;
-import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.RSSItem;
 import za.ac.myuct.klmedu001.uctmobile.constants.UCTConstants;
 import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.NewsCardClickedEvent;
 import za.ac.myuct.klmedu001.uctmobile.processes.loaders.NewsFrontPageLoader;
 import za.ac.myuct.klmedu001.uctmobile.processes.loaders.NewsRSSLoader;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.NewsItem;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.entity.RSSItem;
 
 /**
  * Created by eduardokolomajr on 2014/07/25.
@@ -307,21 +307,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         ArrayList<NewsItem> tempList = (ArrayList<NewsItem>) list.clone();
         Collections.reverse(tempList);  //reverse list so works fine with the database
         TransactionManager.getInstance().save(ProcessModelInfo.withModels(tempList));
-//        ActiveAndroid.beginTransaction();
-//        try {
-//            for(NewsItem item : tempList){
-//                item.save();
-//            }
-//            ActiveAndroid.setTransactionSuccessful();
-//            Log.d(TAG+12, "saved to news table");
-//            success = true;
-//        }catch (Exception e){
-//            Log.d(TAG+12, "error saving to news table");
-//        }
-//        finally {
-//            ActiveAndroid.endTransaction();
-//            Log.d(TAG+12, "end save to news table");
-//        }
+
         return true;
     }
 

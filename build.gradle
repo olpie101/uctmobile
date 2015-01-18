@@ -3,10 +3,12 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'https://raw.github.com/xujiaao/mvn-repository/master/releases' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+        classpath 'com.github.xujiaao:aarLinkSources:1.0.0'
     }
 }
 
@@ -15,5 +17,6 @@ allprojects {
     repositories {
         mavenCentral()
         jcenter()
+        maven { url "https://raw.github.com/Raizlabs/maven-releases/master/releases" }
     }
 }

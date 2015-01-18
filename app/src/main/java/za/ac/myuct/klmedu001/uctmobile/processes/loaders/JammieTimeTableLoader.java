@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.grosner.dbflow.runtime.DBTransactionInfo;
-import com.grosner.dbflow.runtime.TransactionManager;
-import com.grosner.dbflow.runtime.transaction.process.ProcessModelInfo;
-import com.grosner.dbflow.sql.language.Delete;
+import com.raizlabs.android.dbflow.runtime.DBTransactionInfo;
+import com.raizlabs.android.dbflow.runtime.TransactionManager;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import java.io.IOException;
 import java.util.ArrayList;

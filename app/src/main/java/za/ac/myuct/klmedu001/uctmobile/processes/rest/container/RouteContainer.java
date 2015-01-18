@@ -3,9 +3,9 @@ package za.ac.myuct.klmedu001.uctmobile.processes.rest.container;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.grosner.dbflow.annotation.Column;
-import com.grosner.dbflow.annotation.Table;
-import com.grosner.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.Route;
 import za.ac.myuct.klmedu001.uctmobile.constants.AppDatabase;

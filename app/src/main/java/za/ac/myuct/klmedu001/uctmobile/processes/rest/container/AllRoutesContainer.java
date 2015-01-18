@@ -3,9 +3,9 @@ package za.ac.myuct.klmedu001.uctmobile.processes.rest.container;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.grosner.dbflow.annotation.Column;
-import com.grosner.dbflow.annotation.Table;
-import com.grosner.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import za.ac.myuct.klmedu001.uctmobile.api.endpoints.jammieEndpoint.model.AllRoutes;
 import za.ac.myuct.klmedu001.uctmobile.constants.AppDatabase;
@@ -15,7 +15,7 @@ import za.ac.myuct.klmedu001.uctmobile.constants.AppDatabase;
  */
 @Table(databaseName = AppDatabase.NAME, value = AppDatabase.TABLE_ALL_ROUTES)
 public class AllRoutesContainer extends BaseModel implements Parcelable {
-    @Column (columnType = Column.PRIMARY_KEY_AUTO_INCREMENT) long _id;
+    @Column(columnType = Column.PRIMARY_KEY_AUTO_INCREMENT) long _id;
     @Column String bracket;    // Periods it is available (term, vac, etc)
     @Column String route;
     @Column String displayCode;

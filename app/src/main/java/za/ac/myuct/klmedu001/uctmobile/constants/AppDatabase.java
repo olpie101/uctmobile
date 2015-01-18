@@ -1,6 +1,6 @@
 package za.ac.myuct.klmedu001.uctmobile.constants;
 
-import com.grosner.dbflow.annotation.Database;
+import com.raizlabs.android.dbflow.annotation.Database;
 
 /**
  * Created by eduardokolomajr on 2014/12/02.

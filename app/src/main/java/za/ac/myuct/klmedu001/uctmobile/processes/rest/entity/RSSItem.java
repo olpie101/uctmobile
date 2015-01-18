@@ -3,9 +3,9 @@ package za.ac.myuct.klmedu001.uctmobile.processes.rest.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.grosner.dbflow.annotation.Column;
-import com.grosner.dbflow.annotation.Table;
-import com.grosner.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,7 +19,7 @@ import za.ac.myuct.klmedu001.uctmobile.constants.AppDatabase;
  */
 @Table(databaseName = AppDatabase.NAME, value = AppDatabase.TABLE_RSS_FEED)
 public class RSSItem extends BaseModel implements Comparable, Parcelable {
-    @Column (columnType = Column.PRIMARY_KEY_AUTO_INCREMENT) long _id;
+    @Column(columnType = Column.PRIMARY_KEY_AUTO_INCREMENT) long _id;
     @Column public String title;
     @Column public String link;
     @Column public String description;

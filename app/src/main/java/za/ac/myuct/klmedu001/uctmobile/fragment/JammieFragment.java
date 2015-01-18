@@ -19,8 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.grosner.dbflow.sql.builder.Condition;
-import com.grosner.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
@@ -47,6 +47,7 @@ import za.ac.myuct.klmedu001.uctmobile.constants.ottoposters.JammieRouteClickedE
 import za.ac.myuct.klmedu001.uctmobile.processes.AnimatorHeightHolder;
 import za.ac.myuct.klmedu001.uctmobile.processes.AnimatorWeightHolder;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.AllRoutesContainer;
+import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.AllRoutesContainer$Table;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.JammieTimeTableBracketContainer;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.JammieTimeTableBracketContainer$Table;
 import za.ac.myuct.klmedu001.uctmobile.processes.rest.container.RouteContainer;
@@ -160,9 +161,11 @@ public class JammieFragment extends Fragment {
                             Condition.column(JammieTimeTableBracketContainer$Table.END).greaterThan(now)).querySingle();
 
             List<AllRoutesContainer> tempAllRoutes = new Select().from(AllRoutesContainer.class)
-                    .where("bracket LIKE '%"+bracket.getType()+"%'").queryList();
+                    .where(Condition.column(AllRoutesContainer$Table.BRACKET).like(bracket.getType()))
+                    .queryList();
             List<RouteContainer> tempRoutes = new Select().from(RouteContainer.class)
-                    .where("availability LIKE '%" + bracket.getType() + "%'").queryList();
+                    .where(Condition.column(RouteContainer$Table.AVAILABILITY).like(bracket.getType()))
+                    .queryList();
 
             allRoutes.clear();
             allRoutes.addAll(tempAllRoutes);
@@ -350,7 +353,9 @@ public class JammieFragment extends Fragment {
         Log.d(TAG, "getting map for"+selectedDisplayCode+"=>"+evt.displayCode);
 
         routes = new Select().from(RouteContainer.class)
-                .where("displayCode LIKE '"+evt.displayCode+"' AND availability LIKE '%"+bracket.getType()+"%'").queryList();
+                .where(Condition.column(RouteContainer$Table.DISPLAYCODE).like(evt.displayCode))
+                .and(Condition.column(RouteContainer$Table.AVAILABILITY).like(bracket.getType()))
+                .queryList();
         routesListView.setAdapter(new JammieRouteAdapter(routes));
         routesListView.getAdapter().notifyDataSetChanged();
 

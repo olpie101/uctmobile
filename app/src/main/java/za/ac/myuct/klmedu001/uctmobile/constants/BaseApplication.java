@@ -2,7 +2,7 @@ package za.ac.myuct.klmedu001.uctmobile.constants;
 
 import android.app.Application;
 
-import com.grosner.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 

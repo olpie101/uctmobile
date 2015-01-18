@@ -15,8 +15,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.grosner.dbflow.sql.builder.Condition;
-import com.grosner.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.HashMap;
 import java.util.List;
