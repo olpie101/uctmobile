@@ -7,7 +7,7 @@ An Android UCT App which allows the user to view the University's News, Jammie S
 ### What works? ###
 
 * News
-* Jammie Shuttle Timetables
+* Jammie Shuttle Timetables - requires that local app engine instance is running and that the 'setupEnv' API has been called. Use app engine API explorer to initiate the call. 
 
 ### Know Bugs? ###
 
